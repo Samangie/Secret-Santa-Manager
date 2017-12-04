@@ -8,8 +8,9 @@
 
 namespace Campaign\Controller;
 
+include 'Core/Controller/ComponentController.php';
 
-class CampaignController extends \SMM\Core\Controller\ComponentController
+class CampaignController extends \Core\Controller\ComponentController
 {
 
     function output()

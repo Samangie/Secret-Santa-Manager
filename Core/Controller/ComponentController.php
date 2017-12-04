@@ -6,7 +6,7 @@
  * Time: 16:00
  */
 
-namespace SMM\Core\Controller;
+namespace Core\Controller;
 
 
 abstract class ComponentController

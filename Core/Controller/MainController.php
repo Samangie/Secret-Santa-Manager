@@ -9,7 +9,8 @@
 
 namespace Core\Controller;
 
-//require_once 'Core/View/View.php';
+require_once 'Core/View/View.php';
+require_once 'Campaign/Controller/CampaignController.php';
 
 class MainController
 {
@@ -22,13 +23,10 @@ class MainController
         if(isset($request[1]) && !empty($request[1])) { $controllerName = strtolower ($request[1]); };
         if(isset($request[2]) && !empty($request[2])) { $methodName = strtolower ($request[2]); };
 
-        $cn = 'Campaign\Controller\CampaignController';
-        $c = new \Campaign\Controller\CampaignController();
-        echo 'echoo \\';
         $controllerClass = '\\' . ucfirst($controllerName) . "\\Controller\\" . ucfirst($controllerName) . 'Controller';
-        echo $controllerClass;
-        if(include($controllerClass)) {
-
+        
+        if(class_exists($controllerClass)) {
+            die();
             $controller = new $controllerClass();
 
             if(method_exists ($controller, $methodName)) {
