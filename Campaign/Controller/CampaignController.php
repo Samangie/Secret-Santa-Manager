@@ -11,7 +11,7 @@ include 'Core/Controller/ComponentController.php';
 class CampaignController extends ComponentController
 {
 
-    public function handle()
+    public function index()
     {
       echo "hi";
     }

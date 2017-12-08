@@ -9,7 +9,7 @@
 
 abstract class ComponentController
 {
-    abstract protected function handle();
+    abstract protected function index();
 
     protected function output($uri){
 

@@ -9,9 +9,8 @@
 
 class AccessController extends ComponentController
 {
-    public function handle() {
-
-        die();
+    public function index() {
+        
     }
 
 }
