@@ -30,7 +30,9 @@ class Access extends Model
         $statement->bindParam(':email',$email);
         $statement->bindParam(':role',$role);
 
-        $statement->execute();
+        if($statement->execute()) {
+            return true;
+        }
 
     }
 
@@ -40,8 +42,11 @@ class Access extends Model
         $statement->bindParam(':username',$username);
         $statement->bindParam(':password',$password);
 
-        if($statement->execute()){
+        $statement->execute();
+
+        if($statement->rowCount() == 1) {
             return true;
         }
+
     }
 }

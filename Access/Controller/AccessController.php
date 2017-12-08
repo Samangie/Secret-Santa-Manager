@@ -12,27 +12,36 @@ require_once "Access/Model/Access.php";
 class AccessController extends ComponentController
 {
 
-    public function index() {}
+    public function index() {
 
-    public function login() {
+        if(isset($_SESSION['loggedin']) && !empty($_SESSION['loggedin'])) {
+            header("Location: /");
+        };
 
-        $mainController = new MainController();
+    }
+
+    public function login($username = null, $password = null) {
 
         if (isset($_POST['login'])) {
+            if($username != null && $password != null)
             $username = $_POST['username'];
             $password = $_POST['password'];
 
             $access = new Access();
 
             if ($access->login($username, sha1($password))){
-
+                $_SESSION['username'] = $username;
+                $_SESSION['loggedin'] = true;
                 header("Location: /Campaign");
             }else {
                 $_SESSION['userNotExists'] = "Der Benutzername und das Passwort stimmt nicht überein";
 
                 header("Location: /");
             }
+        }else {
+            header("Location: /");
         }
+
 
     }
 
@@ -59,14 +68,14 @@ class AccessController extends ComponentController
             $access = new Access();
 
             if ($access->insert($user)){
-                //login($username, $password);
+                $this->login($username, $password);
             }else {
-                die();
+                header("Location: /Access/");
             }
 
         }else {
             header("Location: /");
-    }
+        }
 
     }
 
