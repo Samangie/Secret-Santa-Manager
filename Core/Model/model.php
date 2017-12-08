@@ -6,10 +6,7 @@
  * Time: 15:15
  */
 
-namespace SSM\Core\Model;
-
-
-abstract class model
+abstract class Model
 {
     abstract protected function insert();
     abstract protected function deleteById();
