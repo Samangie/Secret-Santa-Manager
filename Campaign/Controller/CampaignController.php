@@ -6,16 +6,14 @@
  * Time: 15:59
  */
 
-namespace Campaign\Controller;
-
 include 'Core/Controller/ComponentController.php';
 
-class CampaignController extends \Core\Controller\ComponentController
+class CampaignController extends ComponentController
 {
 
-    function output()
+    public function handle()
     {
-        // TODO: Implement output() method.
+      echo "hi";
     }
 
 }

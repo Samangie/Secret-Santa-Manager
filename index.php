@@ -2,6 +2,6 @@
 
 require_once 'Core/Controller/MainController.php';
 
-$mainController = new \Core\Controller\MainController();
+$mainController = new MainController();
 $mainController->main();
 

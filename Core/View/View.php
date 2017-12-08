@@ -6,8 +6,6 @@
  * Time: 13:41
  */
 
-namespace Core\View;
-
 class View
 {
     public function display($controllerName, $methodName) {

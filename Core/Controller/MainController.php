@@ -7,10 +7,11 @@
  * Time: 13:10
  */
 
-namespace Core\Controller;
 
 require_once 'Core/View/View.php';
+
 require_once 'Campaign/Controller/CampaignController.php';
+require_once 'Access/Controller/AccessController.php';
 
 class MainController
 {
@@ -23,19 +24,19 @@ class MainController
         if(isset($request[1]) && !empty($request[1])) { $controllerName = strtolower ($request[1]); };
         if(isset($request[2]) && !empty($request[2])) { $methodName = strtolower ($request[2]); };
 
-        $controllerClass = '\\' . ucfirst($controllerName) . "\\Controller\\" . ucfirst($controllerName) . 'Controller';
-        
+        $controllerClass = ucfirst($controllerName) . 'Controller';
+        echo $controllerClass;
+        $c = new $controllerClass;
+
         if(class_exists($controllerClass)) {
-            die();
             $controller = new $controllerClass();
 
             if(method_exists ($controller, $methodName)) {
                 $controller->$methodName();
             }
-        } else {
-            $view = new \Core\View\View();
-            $view->display($controllerName,$methodName);
         }
+        $view = new View();
+        $view->display($controllerName,$methodName);
     }
 
 }
