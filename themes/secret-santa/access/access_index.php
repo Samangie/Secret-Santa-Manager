@@ -1,9 +1,6 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: sam.hawkes
- * Date: 30.11.2017
- * Time: 14:21
- */
+<form action="/Access/login" method="post">
 
-echo "Test";
+    <input type="text" placeholder="Benutzername" />
+    <input type="password" placeholder="Passwort" />
+
+</form>

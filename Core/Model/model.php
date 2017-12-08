@@ -8,13 +8,20 @@
 
 abstract class Model
 {
-    abstract protected function insert();
-    abstract protected function deleteById();
-    abstract protected function read();
+    protected $tableName = null;
+    protected $connection = null;
+
+    abstract protected function insert($data);
+
+    function __construct()
+    {
+        $this->connection = $this->getConnection();
+    }
 
     protected  function getConnection() {
         $config = require_once 'config.php';
         $connection = new PDO('mysql:' . $config['database']['host'] . ';dbname=' . $config['database']['host'] . "'", $config['database']['user'], $config['database']['password']);
         return $connection;
     }
+
 }
