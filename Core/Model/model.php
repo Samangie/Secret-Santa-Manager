@@ -13,15 +13,13 @@ abstract class Model
 
     abstract protected function insert($data);
 
-    function __construct()
-    {
-        $this->connection = $this->getConnection();
-    }
+    public function getConnection() {
 
-    protected  function getConnection() {
         $config = require_once 'config.php';
-        $connection = new PDO('mysql:' . $config['database']['host'] . ';dbname=' . $config['database']['host'] . "'", $config['database']['user'], $config['database']['password']);
-        return $connection;
+        $con = new PDO("mysql:host=". $config['database']['host'] .";dbname=". $config['database']['database'], $config['database']['username'], $config['database']['password']);
+        $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $con;
+
     }
 
 }

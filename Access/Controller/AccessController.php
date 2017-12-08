@@ -7,6 +7,8 @@
  * Time: 08:28
  */
 
+require_once "Access/Model/Access.php";
+
 class AccessController extends ComponentController
 {
 
@@ -14,12 +16,22 @@ class AccessController extends ComponentController
 
     public function login() {
 
+        $mainController = new MainController();
+
         if (isset($_POST['login'])) {
             $username = $_POST['username'];
             $password = $_POST['password'];
 
             $access = new Access();
-            $access->login($username, sha1($password));
+
+            if ($access->login($username, sha1($password))){
+
+                header("Location: /Campaign");
+            }else {
+                $_SESSION['userNotExists'] = "Der Benutzername und das Passwort stimmt nicht überein";
+
+                header("Location: /");
+            }
         }
 
     }
@@ -31,31 +43,30 @@ class AccessController extends ComponentController
         if (isset($_POST['register'])) {
             $username = $_POST['username'];
             $password = $_POST['password'];
-            $reppassword = $_POST['reppasword'];
+            $reppassword = $_POST['reppassword'];
             $email = $_POST['email'];
 
             if ($password != $reppassword) {
-                $_SESSION['notSamePassword'] == "Das Passwort stimmt nicht überein.";
-                $mainController->main("access");
-
+                $_SESSION['notSamePassword'] = "Das Passwort stimmt nicht überein.";
             }
 
             $user[] = array('username' => $username,
                           'password' => sha1($password),
                           'email' => $email,
-                          'role' => "participant"
+                          'role' => 0,
             );
 
             $access = new Access();
 
             if ($access->insert($user)){
-                $mainController->main("campaign", "overview");
+                //login($username, $password);
+            }else {
+                die();
             }
 
-
         }else {
-            $mainController->main("access");
-        }
+            header("Location: /");
+    }
 
     }
 

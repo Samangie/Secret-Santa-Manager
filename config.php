@@ -9,7 +9,7 @@
 return [
     'database' => [
         'host' => 'localhost',
-        'user' => 'root',
+        'username' => 'root',
         'password' => '',
         'database' => 'secret-santa-manager'
     ],
