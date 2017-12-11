@@ -39,4 +39,18 @@ class CampaignController extends ComponentController
         }
     }
 
+    public function delete() {
+
+        if (isset($_GET['id'])) {
+
+            $id = $_GET['id'];
+
+            $campaign = new Campaign();
+            $campaign->deleteById($id);
+
+            header("Location: /Campaign/");
+        }
+
+    }
+
 }

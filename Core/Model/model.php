@@ -31,4 +31,15 @@ abstract class Model
         return $result;
     }
 
+    public function deleteById($id) {
+        $statement = $this->getConnection()->prepare("DELETE FROM `" . $this->tableName . "` WHERE id = :id");
+
+        $statement->bindParam(':id',$id);
+
+        if($statement->execute()) {
+            return true;
+        }
+
+    }
+
 }
