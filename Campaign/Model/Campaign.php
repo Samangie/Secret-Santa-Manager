@@ -16,7 +16,7 @@ class Campaign extends Model
     public function insert($data)
     {
         foreach($data as $entry) {
-            $title = (string)$entry['username'];
+            $title = (string)$entry['title'];
             $startdate = (string)$entry['startdate'];
         }
 
