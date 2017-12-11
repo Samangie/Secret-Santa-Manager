@@ -14,6 +14,7 @@ CREATE TABLE `user` (
 
 CREATE TABLE `campaign` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `title` VARCHAR(30),
     `startdate` DATE
     );
 
