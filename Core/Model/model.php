@@ -31,6 +31,17 @@ abstract class Model
         return $result;
     }
 
+    public function readByAttribut($attribut, $value) {
+        $statement = $this->getConnection()->prepare("SELECT id FROM `" . $this->tableName . "` WHERE `$attribut` = :$attribut");
+        $statement->bindParam(':'.$attribut,$value);
+
+        $statement->execute();
+
+        if($statement->rowCount() == 0) {
+            return true;
+        }
+    }
+
     public function deleteById($id) {
         $statement = $this->getConnection()->prepare("DELETE FROM `" . $this->tableName . "` WHERE id = :id");
 

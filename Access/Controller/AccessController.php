@@ -8,6 +8,7 @@
  */
 
 require_once "Access/Model/Access.php";
+require_once "Access/UserValidation.php";
 
 class AccessController extends ComponentController
 {
@@ -29,16 +30,21 @@ class AccessController extends ComponentController
             $password = $_POST['password'];
         }
 
-        $access = new Access();
+        $validation = new UserValidation();
 
-        if ($access->login($username, sha1($password))){
-            $_SESSION['username'] = $username;
-            $_SESSION['loggedin'] = true;
-            header("Location: /Campaign/");
-        }else {
-            $_SESSION['userDoesntExist'] = "Der Benutzername und das Passwort stimmt nicht überein";
-            header("Location: /Access/");
+        if($validation->valueIsString($username) & $validation->valueIsString($password)) {
+            $access = new Access();
+
+            if ($access->login($username, sha1($password))){
+                $_SESSION['username'] = $username;
+                $_SESSION['loggedin'] = true;
+                header("Location: /Campaign/");
+            }else {
+                $_SESSION['userDoesntExist'] = "Der Benutzername und das Passwort stimmt nicht überein";
+
+            }
         }
+        header("Location: /Access/");
     }
 
     public function register() {
@@ -49,25 +55,26 @@ class AccessController extends ComponentController
             $reppassword = $_POST['reppassword'];
             $email = $_POST['email'];
 
-            if ($password != $reppassword) {
-                $_SESSION['differentPassword'] = "Das Passwort stimmt nicht überein.";
-                header("Location: /Access/");
-            }
+            $validation = new UserValidation();
 
-            $user[] = array('username' => $username,
-                          'password' => sha1($password),
-                          'email' => $email,
-                          'role' => 0,
-            );
+            if($validation->valueIsString($username) & $validation->uniqueUsername($username) &
+                $validation->valueIsString($password) & $validation->passwordIsValid($password) &
+                $validation->comparePasswords($password, $reppassword) & $validation->emailIsValid() &
+                $validation->uniqueEmail($email) & $validation->valueIsString($email)) {
 
-            $access = new Access();
+                $user[] = array('username' => $username,
+                    'password' => sha1($password),
+                    'email' => $email,
+                    'role' => 0,
+                );
 
-            if ($access->insert($user)){
-                $_SESSION['username'] = $username;
-                $_SESSION['loggedin'] = true;
-                header("Location: /Campaign/");
-            }else {
-                header("Location: /Access/");
+                $access = new Access();
+
+                if ($access->insert($user)){
+                    $_SESSION['username'] = $username;
+                    $_SESSION['loggedin'] = true;
+                    header("Location: /Campaign/");
+                }
             }
 
         }else {
