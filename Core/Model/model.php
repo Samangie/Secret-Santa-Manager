@@ -22,4 +22,13 @@ abstract class Model
 
     }
 
+    public function readAll(){
+        $statement = $this->getConnection()->prepare("SELECT * FROM " . $this->tableName);
+
+        $statement->execute();
+
+        $result = $statement->fetchAll();
+        return $result;
+    }
+
 }
