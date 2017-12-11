@@ -10,6 +10,7 @@
 
 require_once 'Core/View/View.php';
 
+require_once 'Home/Controller/HomeController.php';
 require_once 'Campaign/Controller/CampaignController.php';
 require_once 'Access/Controller/AccessController.php';
 
@@ -25,13 +26,10 @@ class MainController
 
         if(class_exists($controllerClass)) {
             $controller = new $controllerClass();
-
             if(method_exists ($controller, $methodName)) {
                 $controller->$methodName();
             }
         }
-        $view = new View();
-        $view->display($controllerName,$methodName);
     }
 
 }

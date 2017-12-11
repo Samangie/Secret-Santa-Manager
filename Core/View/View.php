@@ -9,8 +9,11 @@
 
 class View
 {
-    public function display($controllerName, $methodName) {
-        $config = require_once 'config.php';
+    public function display($controllerName, $methodName, $dataFromDB) {
+
+        extract($dataFromDB);
+
+        $config = require 'config.php';
         require_once "themes/" . $config['themeName'] . "/header.php";
         require_once "themes/" . $config['themeName'] . "/footer.php";
 
@@ -20,7 +23,7 @@ class View
             include_once($path);
             include_once("themes/" . $config['themeName'] . "/footer.php");
         } else {
-            include ("themes/" . $config['themeName'] . "/error.php");
+            include_once ("themes/" . $config['themeName'] . "/error.php");
         }
     }
 

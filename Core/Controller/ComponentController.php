@@ -11,4 +11,10 @@ abstract class ComponentController
 {
     abstract protected function index();
 
+    protected function output($controllerName,$methodName, $dataFromDB = null) {
+        $view = new View();
+        $view->entries = $dataFromDB;
+        $view->display($controllerName,$methodName, $dataFromDB);
+    }
+
 }

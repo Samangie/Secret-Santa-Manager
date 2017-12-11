@@ -18,6 +18,8 @@ class AccessController extends ComponentController
             header("Location: /");
         };
 
+        $this->output("access","index");
+
     }
 
     public function login($username = null, $password = null) {
