@@ -8,6 +8,7 @@
 
 include 'Core/Controller/ComponentController.php';
 require_once "Campaign/Model/Campaign.php";
+require_once "Campaign/Model/CampaignUser.php";
 
 class CampaignController extends ComponentController
 {
@@ -49,6 +50,27 @@ class CampaignController extends ComponentController
             $campaign->deleteById($id);
 
             header("Location: /Campaign/");
+        }
+
+    }
+
+    public function addUser() {
+
+        if (isset($_GET['id'])) {
+
+            $campaign_id = $_GET['id'];
+            $username = $_SESSION['username'];
+
+            $campaignUserEntry[] = array('campaign_id' => $campaign_id,
+                'username' => $username,
+            );
+
+            $campaignUser = new CampaignUser();
+
+            $campaignUser->insert($campaignUserEntry);
+
+            header("Location: /Campaign/");
+
         }
 
     }
