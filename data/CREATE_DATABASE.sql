@@ -22,7 +22,7 @@ CREATE TABLE `user_campaign` (
     `user_id` INT,
     `campaign_id` INT,
     CONSTRAINT FK_User FOREIGN KEY (`user_id`)
-    REFERENCES user(`id`),
+    REFERENCES user(`id`) ON DELETE CASCADE,
     CONSTRAINT FK_Campaign FOREIGN KEY (`campaign_id`)
-    REFERENCES campaign(`id`)
+    REFERENCES campaign(`id`) ON DELETE CASCADE
     );
