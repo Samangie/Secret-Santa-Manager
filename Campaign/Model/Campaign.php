@@ -15,7 +15,19 @@ class Campaign extends Model
 
     public function insert($data)
     {
-        // TODO: Implement insert() method.
+        foreach($data as $entry) {
+            $title = (string)$entry['username'];
+            $startdate = (string)$entry['startdate'];
+        }
+
+        $statement = $this->getConnection()->prepare("INSERT INTO `" . $this->tableName . "` (`title`, `startdate`) VALUES (:title, :startdate)");
+
+        $statement->bindParam(':title',$title);
+        $statement->bindParam(':startdate',$startdate);
+
+        if($statement->execute()) {
+            return true;
+        }
     }
 
 }

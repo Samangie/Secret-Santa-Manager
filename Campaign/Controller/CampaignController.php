@@ -20,4 +20,23 @@ class CampaignController extends ComponentController
 
     }
 
+    public function create() {
+
+        if (isset($_POST['create-campaign'])) {
+
+            $title = $_POST['title'];
+            $startdate = $_POST['startdate'];
+
+            $campaign = new Campaign();
+
+            $campaignEntry[] = array('title' => $title,
+                'startdate' => $startdate,
+            );
+
+            if ($campaign->insert($campaignEntry)) {
+                header("Location: /Campaign/");
+            }
+        }
+    }
+
 }

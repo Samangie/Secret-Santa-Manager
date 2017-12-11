@@ -11,8 +11,10 @@ class View
 {
     public function display($controllerName, $methodName, $dataFromDB) {
 
-        extract($dataFromDB);
-
+        if(isset($dataFromDB)) {
+            extract($dataFromDB);
+        }
+        
         $config = require 'config.php';
         require_once "themes/" . $config['themeName'] . "/header.php";
         require_once "themes/" . $config['themeName'] . "/footer.php";
