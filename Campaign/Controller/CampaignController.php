@@ -7,13 +7,17 @@
  */
 
 include 'Core/Controller/ComponentController.php';
+require_once "Campaign/Model/Campaign.php";
 
 class CampaignController extends ComponentController
 {
-
     public function index()
     {
-      echo "hi";
+        $campaign = new Campaign();
+        $camaignEntries = $campaign->readAll();
+
+        $this->output("campaign", "index", $camaignEntries);
+
     }
 
 }
