@@ -8,6 +8,7 @@
  */
 
 require_once "Core/lib/Validation.php";
+require_once "Access/Model/Access.php";
 
 class UserValidation extends Validation
 {

@@ -8,7 +8,7 @@
  */
 
 require_once "Access/Model/Access.php";
-require_once "Access/UserValidation.php";
+require_once "Access/AccessValidation.php";
 
 class AccessController extends ComponentController
 {
