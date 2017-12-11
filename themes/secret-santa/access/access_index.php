@@ -5,7 +5,8 @@
     <button type="submit" name="login">Button</button>
 </form>
 
-<?php if(isset($_SESSION['userNotExists']) && !empty($_SESSION['userNotExists'])) { echo $_SESSION['userNotExists'];}; ?>
+<?php if(isset($_SESSION['userDoesntExist']) && !empty($_SESSION['userDoesntExist'])) { echo $_SESSION['userDoesntExist'];}; ?>
+<?php if(isset($_SESSION['differentPassword']) && !empty($_SESSION['differentPassword'])) { echo $_SESSION['differentPassword'];}; ?>
 
 
 <form action="/Access/register" method="post">

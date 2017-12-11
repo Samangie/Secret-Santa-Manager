@@ -23,7 +23,7 @@ class Access extends Model
             $role = (int)$d['role'];
         }
 
-        $statement = $this->getConnection()->prepare("INSERT INTO " . $this->tableName . " (username, password, email, role) VALUES (:username, :password, :email, :role)");
+        $statement = $this->getConnection()->prepare("INSERT INTO `" . $this->tableName . "` (`username`, `password`, `email`, `role`) VALUES (:username, :password, :email, :role)");
 
         $statement->bindParam(':username',$username);
         $statement->bindParam(':password',$password);

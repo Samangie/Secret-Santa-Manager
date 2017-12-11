@@ -23,31 +23,23 @@ class AccessController extends ComponentController
     public function login($username = null, $password = null) {
 
         if (isset($_POST['login'])) {
-            if($username != null && $password != null)
             $username = $_POST['username'];
             $password = $_POST['password'];
-
-            $access = new Access();
-
-            if ($access->login($username, sha1($password))){
-                $_SESSION['username'] = $username;
-                $_SESSION['loggedin'] = true;
-                header("Location: /Campaign");
-            }else {
-                $_SESSION['userNotExists'] = "Der Benutzername und das Passwort stimmt nicht überein";
-
-                header("Location: /");
-            }
-        }else {
-            header("Location: /");
         }
 
+        $access = new Access();
 
+        if ($access->login($username, sha1($password))){
+            $_SESSION['username'] = $username;
+            $_SESSION['loggedin'] = true;
+            header("Location: /Campaign/");
+        }else {
+            $_SESSION['userDoesntExist'] = "Der Benutzername und das Passwort stimmt nicht überein";
+            header("Location: /Access/");
+        }
     }
 
     public function register() {
-
-        $mainController = new MainController();
 
         if (isset($_POST['register'])) {
             $username = $_POST['username'];
@@ -56,7 +48,8 @@ class AccessController extends ComponentController
             $email = $_POST['email'];
 
             if ($password != $reppassword) {
-                $_SESSION['notSamePassword'] = "Das Passwort stimmt nicht überein.";
+                $_SESSION['differentPassword'] = "Das Passwort stimmt nicht überein.";
+                header("Location: /Access/");
             }
 
             $user[] = array('username' => $username,
@@ -68,15 +61,22 @@ class AccessController extends ComponentController
             $access = new Access();
 
             if ($access->insert($user)){
-                $this->login($username, $password);
+                $_SESSION['username'] = $username;
+                $_SESSION['loggedin'] = true;
+                header("Location: /Campaign/");
             }else {
                 header("Location: /Access/");
             }
 
         }else {
-            header("Location: /");
+            header("Location: /Access/");
         }
 
     }
 
+    public function logout()
+    {
+        session_destroy();
+        header("Location: /");
+    }
 }
