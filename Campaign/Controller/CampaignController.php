@@ -6,7 +6,7 @@
  * Time: 15:59
  */
 
-include 'Core/Controller/ComponentController.php';
+include_once 'Core/Controller/ComponentController.php';
 require_once "Campaign/Model/Campaign.php";
 require_once "Campaign/Model/CampaignUser.php";
 

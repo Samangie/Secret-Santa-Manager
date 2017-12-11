@@ -6,8 +6,8 @@
  * Date: 11.12.2017
  * Time: 10:39
  */
-
-class HomeController
+include_once 'Core/Controller/ComponentController.php';
+class HomeController extends ComponentController
 {
     public function index()
     {
