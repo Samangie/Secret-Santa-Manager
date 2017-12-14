@@ -8,7 +8,7 @@
  */
 
 require_once "Access/Model/Access.php";
-require_once "Access/AccessValidation.php";
+require_once "Access/AccessValidator.php";
 
 class AccessController extends ComponentController
 {
@@ -30,7 +30,7 @@ class AccessController extends ComponentController
             $password = $_POST['password'];
         }
 
-        $validation = new UserValidation();
+        $validation = new AccessValidator();
 
         if($validation->valueIsString($username) & $validation->valueIsString($password)) {
             $access = new Access();
@@ -55,11 +55,11 @@ class AccessController extends ComponentController
             $reppassword = $_POST['reppassword'];
             $email = $_POST['email'];
 
-            $validation = new UserValidation();
+            $validation = new AccessValidator();
 
             if($validation->valueIsString($username) & $validation->uniqueUsername($username) &
                 $validation->valueIsString($password) & $validation->passwordIsValid($password) &
-                $validation->comparePasswords($password, $reppassword) & $validation->emailIsValid() &
+                $validation->comparePasswords($password, $reppassword) & $validation->emailIsValid($email) &
                 $validation->uniqueEmail($email) & $validation->valueIsString($email)) {
 
                 $user[] = array('username' => $username,
@@ -70,13 +70,13 @@ class AccessController extends ComponentController
 
                 $access = new Access();
 
-                if ($access->insert($user)){
+                if ($access->insert($user)) {
                     $_SESSION['username'] = $username;
                     $_SESSION['loggedin'] = true;
                     header("Location: /Campaign/");
                 }
-            }
 
+            }
         }else {
             header("Location: /Access/");
         }

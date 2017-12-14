@@ -10,7 +10,7 @@
 require_once "Core/lib/Validation.php";
 require_once "Access/Model/Access.php";
 
-class UserValidation extends Validation
+class AccessValidation extends Validation
 {
 
     public function passwordIsValid($password){
@@ -35,8 +35,8 @@ class UserValidation extends Validation
 
     public function uniqueUsername($username) {
 
-        $user = new User();
-        if($user->readByAttribut('username', $username)) {
+        $access = new Access();
+        if($access->readByAttribut('username', $username)) {
             return true;
         }
 
@@ -47,8 +47,8 @@ class UserValidation extends Validation
 
     public function uniqueEmail($email) {
 
-        $user = new User();
-        if($user->readByAttribut('email', $email)) {
+        $access = new Access();
+        if($access->readByAttribut('email', $email)) {
             return true;
         }
 
