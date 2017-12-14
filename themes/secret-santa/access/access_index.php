@@ -13,6 +13,7 @@
 
     <input type="text" name="username" placeholder="Benutzername" />
     <input type="text" name="email" placeholder="Email" />
+    <input type="text" name="role" placeholder="Rolle" />
     <input type="password" name="password" placeholder="Passwort" />
     <input type="password" name="reppassword" placeholder="Passwort wiederholen" />
     <button type="submit" name="register">Button</button>
