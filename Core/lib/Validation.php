@@ -6,12 +6,13 @@
  * Date: 11.12.2017
  * Time: 15:12
  */
+
 class Validation
 {
 
     public function valueIsInteger($value, $lengthMax = 11, $lengthMin = 1) {
 
-        if(is_int ($value) && $value.length <= $lengthMax && $value.length >= $lengthMin) {
+        if(is_int ($value) && strlen ($value) <= $lengthMax && strlen ($value) >= $lengthMin) {
             return true;
         }
 
@@ -22,7 +23,7 @@ class Validation
 
     public function valueIsString($value, $lengthMax = 50, $lengthMin = 1) {
 
-        if(is_string ($value) && $value.length <= $lengthMax && $value.length >= $lengthMin) {
+        if(is_string ($value) && strlen ($value) <= $lengthMax && strlen ($value) >= $lengthMin) {
             return true;
         }
 

@@ -18,11 +18,10 @@ class CampaignController extends ComponentController
         $camaignEntries = $campaign->readAll();
 
         $this->output("campaign", "index", $camaignEntries);
-
     }
 
-    public function create() {
-
+    public function create()
+    {
         if (isset($_POST['create-campaign'])) {
 
             $title = $_POST['title'];
@@ -40,8 +39,8 @@ class CampaignController extends ComponentController
         }
     }
 
-    public function delete() {
-
+    public function delete()
+    {
         if (isset($_GET['id'])) {
 
             $id = $_GET['id'];
@@ -51,11 +50,10 @@ class CampaignController extends ComponentController
 
             header("Location: /Campaign/");
         }
-
     }
 
-    public function addUser() {
-
+    public function addParticipant()
+    {
         if (isset($_GET['id'])) {
 
             $campaign_id = $_GET['id'];
@@ -70,9 +68,21 @@ class CampaignController extends ComponentController
             $campaignUser->insert($campaignUserEntry);
 
             header("Location: /Campaign/");
-
         }
+    }
 
+    public function showParticipant()
+    {
+        if (isset($_GET['id'])) {
+
+            $campaign_id = $_GET['id'];
+
+            $campaignUser = new CampaignUser();
+
+            $participantEntries = $campaignUser->readAllParticipant($campaign_id);
+
+            $this->output("campaign", "participants", $participantEntries);
+        }
     }
 
 }
