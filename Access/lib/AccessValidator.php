@@ -8,10 +8,13 @@
  */
 
 require_once "Core/lib/Validation.php";
-require_once "Access/Model/Access.php";
+require_once "Access/Model/User.php";
 
 class AccessValidation extends Validation
 {
+    public function isValid($username, $email, $password) {
+
+    }
 
     public function passwordIsValid($password){
 

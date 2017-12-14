@@ -10,7 +10,7 @@
 
 require_once "Core/Model/Model.php";
 
-class Access extends Model
+class User extends Model
 {
     protected $tableName = 'user';
 

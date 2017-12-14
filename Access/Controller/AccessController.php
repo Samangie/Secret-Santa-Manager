@@ -7,7 +7,7 @@
  * Time: 08:28
  */
 
-require_once "Access/Model/Access.php";
+require_once "Access/Model/User.php";
 require_once "Access/AccessValidator.php";
 
 class AccessController extends ComponentController
@@ -33,7 +33,7 @@ class AccessController extends ComponentController
         $validation = new AccessValidator();
 
         if($validation->valueIsString($username) & $validation->valueIsString($password)) {
-            $access = new Access();
+            $access = new User();
 
             if ($access->login($username, sha1($password))){
                 $_SESSION['username'] = $username;
@@ -68,7 +68,7 @@ class AccessController extends ComponentController
                     'role' => 0,
                 );
 
-                $access = new Access();
+                $access = new User();
 
                 if ($access->insert($user)) {
                     $_SESSION['username'] = $username;
