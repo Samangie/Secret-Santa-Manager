@@ -13,19 +13,24 @@ class Campaign extends Model
 {
     protected $tableName = 'campaign';
 
-    public function insert($data)
-    {
-        foreach($data as $entry) {
-            $title = (string)$entry['title'];
-            $startdate = (string)$entry['startdate'];
-        }
+    protected $title;
+    protected $startdate;
 
+    public function __construct($title = null, $startdate = null)
+    {
+        parent::getConnection();
+        $this->title = $title;
+        $this->startdate = $startdate;
+    }
+
+    public function insert()
+    {
         $statement = $this->connection->prepare("INSERT INTO `" . $this->tableName . "` (`title`, `startdate`) VALUES (:title, :startdate)");
 
-        $statement->bindParam(':title',$title);
-        $statement->bindParam(':startdate',$startdate);
+        $statement->bindParam(':title',$this->title);
+        $statement->bindParam(':startdate',$this->startdate);
 
-        if($statement->execute()) {
+        if ($statement->execute()) {
             return true;
         }
     }

@@ -14,40 +14,44 @@ class CampaignController extends ComponentController
 {
     public function index()
     {
-        $campaign = new Campaign();
-        $camaignEntries = $campaign->readAll();
+        if (isset($_SESSION['loggedin'])) {
+            $campaign = new Campaign();
+            $camaignEntries = $campaign->readAll();
 
-        $this->output("campaign", "index", $camaignEntries);
+            $this->output("campaign", "index", $camaignEntries);
+        } else {
+            header("Location: /Access/");
+        }
     }
 
     public function create()
     {
-        if (isset($_POST['create-campaign'])) {
+        if (isset($_POST['create-campaign']) && !empty($_SESSION['role'])) {
 
             $title = $_POST['title'];
             $startdate = $_POST['startdate'];
 
-            $campaign = new Campaign();
+            $campaign = new Campaign($title, $startdate);
 
-            $campaignEntry[] = array('title' => $title,
-                'startdate' => $startdate,
-            );
-
-            if ($campaign->insert($campaignEntry)) {
+            if ($campaign->insert()) {
                 header("Location: /Campaign/");
             }
+        } else {
+            header("Location: /");
         }
     }
 
     public function delete()
     {
-        if (isset($_GET['id'])) {
+        if (isset($_GET['id']) && !empty($_SESSION['role'])) {
 
             $id = $_GET['id'];
 
             $campaign = new Campaign();
             $campaign->deleteById($id);
 
+            header("Location: /Campaign/");
+        } else {
             header("Location: /Campaign/");
         }
     }
