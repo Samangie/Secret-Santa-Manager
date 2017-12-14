@@ -32,6 +32,7 @@ class AccessController extends ComponentController
 
         if ($user->login()) {
             $_SESSION['username'] = $user->username;
+            $_SESSION['role'] = $user->role;
             $_SESSION['loggedin'] = true;
             header("Location: /Campaign/");
         } else {
@@ -48,7 +49,7 @@ class AccessController extends ComponentController
             $password = $_POST['password'];
             $reppassword = $_POST['reppassword'];
             $email = $_POST['email'];
-            $role = 0;
+            $role = $_POST['role'];
 
             $user = new User($username, $password, $email, $role);
 
@@ -57,6 +58,7 @@ class AccessController extends ComponentController
             if($validator->isValid($user, sha1($reppassword))) {
                 if ($user->insert()) {
                     $_SESSION['username'] = $user->username;
+                    $_SESSION['role'] = $user->role;
                     $_SESSION['loggedin'] = true;
                     header("Location: /Campaign/");
                 }

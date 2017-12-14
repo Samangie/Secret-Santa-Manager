@@ -18,7 +18,7 @@
 
     <input type="text" name="username" placeholder="Benutzername" />
     <input type="text" name="email" placeholder="Email" />
-    <input type="text" name="role" placeholder="Rolle" />
+    <input type="radio" id="role2" name="role" value="0">Teilnehmer <input type="radio" id="role1" name="role" value="1">Organisator
     <input type="password" name="password" placeholder="Passwort" />
     <input type="password" name="reppassword" placeholder="Passwort wiederholen" />
     <button type="submit" name="register">Registrieren</button>

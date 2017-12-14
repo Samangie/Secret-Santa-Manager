@@ -20,7 +20,7 @@ class User extends Model
     protected $email;
     protected $role;
 
-    public function __construct($username, $password, $email = null, $role = null)
+    public function __construct($username, $password = null, $email = null, $role = null)
     {
         parent::getConnection();
         $this->username = $username;
@@ -29,13 +29,15 @@ class User extends Model
         $this->role = $role;
     }
 
-    public function __get($property) {
+    public function __get($property)
+    {
         if (property_exists($this, $property)) {
             return $this->$property;
         }
     }
 
-    public function __set($property, $value) {
+    public function __set($property, $value)
+    {
         if (property_exists($this, $property)) {
             $this->$property = $value;
         }
@@ -52,7 +54,7 @@ class User extends Model
         $statement->bindParam(':email',$this->email);
         $statement->bindParam(':role',$this->role);
 
-        if($statement->execute()) {
+        if ($statement->execute()) {
             return true;
         }
 
@@ -66,10 +68,12 @@ class User extends Model
 
         $statement->execute();
 
-        if($statement->rowCount() == 1) {
+        if ($statement->rowCount() == 1) {
+            $result = $statement->fetch();
+            $this->role = $result['role'];
+
             return true;
         }
-
     }
 
     public function logout()
