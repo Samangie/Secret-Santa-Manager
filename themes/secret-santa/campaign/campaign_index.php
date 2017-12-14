@@ -4,7 +4,7 @@
 
     <input type="text" name="title" placeholder="Titel" />
     <input type="date" name="startdate" placeholder="Startdatum" />
-    <button type="submit" name="create-campaign">Button</button>
+    <button type="submit" name="create-campaign">Erstellen</button>
 </form>
 
 <br/>
