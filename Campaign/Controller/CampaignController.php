@@ -58,18 +58,14 @@ class CampaignController extends ComponentController
 
     public function addParticipant()
     {
-        if (isset($_GET['id'])) {
+        if (isset($_GET['id']) && !empty($_SESSION['loggedin'])) {
 
             $campaign_id = $_GET['id'];
             $username = $_SESSION['username'];
 
-            $campaignUserEntry[] = array('campaign_id' => $campaign_id,
-                'username' => $username,
-            );
+            $campaignUser = new CampaignUser($username,$campaign_id);
 
-            $campaignUser = new CampaignUser();
-
-            $campaignUser->insert($campaignUserEntry);
+            $campaignUser->insert();
 
             header("Location: /Campaign/");
         }
@@ -77,13 +73,13 @@ class CampaignController extends ComponentController
 
     public function showParticipant()
     {
-        if (isset($_GET['id'])) {
+        if (isset($_GET['id']) && !empty($_SESSION['loggedin'])) {
 
             $campaign_id = $_GET['id'];
 
-            $campaignUser = new CampaignUser();
+            $campaignUser = new CampaignUser(null, $campaign_id);
 
-            $participantEntries = $campaignUser->readAllParticipant($campaign_id);
+            $participantEntries = $campaignUser->readAllParticipant();
 
             $this->output("campaign", "participants", $participantEntries);
         }
