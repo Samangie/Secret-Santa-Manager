@@ -12,7 +12,7 @@ require_once "Campaign/Model/CampaignUser.php";
 
 class CampaignController extends ComponentController
 {
-    public function index()
+    public function __construct()
     {
         if (isset($_SESSION['loggedin'])) {
             $campaign = new Campaign();

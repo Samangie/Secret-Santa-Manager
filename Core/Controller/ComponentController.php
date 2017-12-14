@@ -9,7 +9,7 @@
 
 abstract class ComponentController
 {
-    abstract protected function index();
+    abstract protected function __construct();
 
     protected function output($controllerName,$methodName, $dataFromDB = null) {
         $view = new View();
