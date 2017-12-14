@@ -23,7 +23,7 @@ class Access extends Model
             $role = (int)$d['role'];
         }
 
-        $statement = $this->getConnection()->prepare("INSERT INTO `" . $this->tableName . "` (`username`, `password`, `email`, `role`) VALUES (:username, :password, :email, :role)");
+        $statement = $this->connection->prepare("INSERT INTO `" . $this->tableName . "` (`username`, `password`, `email`, `role`) VALUES (:username, :password, :email, :role)");
 
         $statement->bindParam(':username',$username);
         $statement->bindParam(':password',$password);
@@ -38,7 +38,7 @@ class Access extends Model
 
     public function login($username, $password)
     {
-        $statement = $this->getConnection()->prepare("SELECT `username`, `role` FROM `" . $this->tableName . "` WHERE `username` = :username AND `password` = :password");
+        $statement = $this->connection->prepare("SELECT `username`, `role` FROM `" . $this->tableName . "` WHERE `username` = :username AND `password` = :password");
         $statement->bindParam(':username',$username);
         $statement->bindParam(':password',$password);
 

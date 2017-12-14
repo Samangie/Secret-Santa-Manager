@@ -20,7 +20,7 @@ class Campaign extends Model
             $startdate = (string)$entry['startdate'];
         }
 
-        $statement = $this->getConnection()->prepare("INSERT INTO `" . $this->tableName . "` (`title`, `startdate`) VALUES (:title, :startdate)");
+        $statement = $this->connection->prepare("INSERT INTO `" . $this->tableName . "` (`title`, `startdate`) VALUES (:title, :startdate)");
 
         $statement->bindParam(':title',$title);
         $statement->bindParam(':startdate',$startdate);

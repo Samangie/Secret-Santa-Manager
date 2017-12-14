@@ -13,6 +13,8 @@ class CampaignUser extends Model
 {
     protected $tableName = 'user_campaign';
 
+
+
     public function insert($data)
     {
         foreach($data as $entry) {
@@ -20,7 +22,7 @@ class CampaignUser extends Model
             $campaign_id = (string)$entry['campaign_id'];
         }
 
-        $statement = $this->getConnection()->prepare("INSERT INTO `" . $this->tableName . "` (`user_id`, `campaign_id`) VALUES ((SELECT id FROM user WHERE username = :username), :campaign_id)");
+        $statement = $this->connection->prepare("INSERT INTO `" . $this->tableName . "` (`user_id`, `campaign_id`) VALUES ((SELECT id FROM user WHERE username = :username), :campaign_id)");
 
         $statement->bindParam(':username',$username);
         $statement->bindParam(':campaign_id',$campaign_id);
@@ -28,5 +30,16 @@ class CampaignUser extends Model
         if($statement->execute()) {
             return true;
         }
+    }
+
+    public function readAllParticipant($campaign_id) {
+        $statement = $this->connection->prepare("SELECT user.username FROM " . $this->tableName . " LEFT JOIN user ON ($this->tableName.user_id = user.id) WHERE campaign_id = :campaign_id");
+
+        $statement->bindParam(':campaign_id',$campaign_id);
+
+        $statement->execute();
+
+        $result = $statement->fetchAll();
+        return $result;
     }
 }
