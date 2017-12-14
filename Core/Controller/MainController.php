@@ -16,7 +16,14 @@ require_once 'Access/Controller/AccessController.php';
 
 class MainController
 {
-    public function main() {
+    public function __construct()
+    {
+        session_start();
+        $this->main();
+    }
+
+    public function main()
+    {
         $controllerName = "home";
         $methodName = "index";
 
