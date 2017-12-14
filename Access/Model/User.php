@@ -14,21 +14,43 @@ class User extends Model
 {
     protected $tableName = 'user';
 
-    public function insert($data)
+    protected $id;
+    protected $username;
+    protected $password;
+    protected $email;
+    protected $role;
+
+    public function __construct($username, $password, $email = null, $role = null)
     {
-        foreach($data as $d) {
-            $username = (string)$d['username'];
-            $password = (string)$d['password'];
-            $email = (string)$d['email'];
-            $role = (int)$d['role'];
+        parent::getConnection();
+        $this->username = $username;
+        $this->password = sha1($password);
+        $this->email = $email;
+        $this->role = $role;
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+
+    public function __set($property, $value) {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
         }
 
+        return $this;
+    }
+
+    public function insert()
+    {
         $statement = $this->connection->prepare("INSERT INTO `" . $this->tableName . "` (`username`, `password`, `email`, `role`) VALUES (:username, :password, :email, :role)");
 
-        $statement->bindParam(':username',$username);
-        $statement->bindParam(':password',$password);
-        $statement->bindParam(':email',$email);
-        $statement->bindParam(':role',$role);
+        $statement->bindParam(':username',$this->username);
+        $statement->bindParam(':password',$this->password);
+        $statement->bindParam(':email',$this->email);
+        $statement->bindParam(':role',$this->role);
 
         if($statement->execute()) {
             return true;
@@ -36,11 +58,11 @@ class User extends Model
 
     }
 
-    public function login($username, $password)
+    public function login()
     {
         $statement = $this->connection->prepare("SELECT `username`, `role` FROM `" . $this->tableName . "` WHERE `username` = :username AND `password` = :password");
-        $statement->bindParam(':username',$username);
-        $statement->bindParam(':password',$password);
+        $statement->bindParam(':username',$this->username);
+        $statement->bindParam(':password',$this->password);
 
         $statement->execute();
 
@@ -48,5 +70,10 @@ class User extends Model
             return true;
         }
 
+    }
+
+    public function logout()
+    {
+        session_destroy();
     }
 }

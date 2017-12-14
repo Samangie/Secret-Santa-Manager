@@ -5,8 +5,13 @@
     <button type="submit" name="login">Login</button>
 </form>
 
-<?php if(isset($_SESSION['userDoesntExist']) && !empty($_SESSION['userDoesntExist'])) { echo $_SESSION['userDoesntExist'];}; ?>
-<?php if(isset($_SESSION['differentPassword']) && !empty($_SESSION['differentPassword'])) { echo $_SESSION['differentPassword'];}; ?>
+<?php if(!empty($_SESSION['userDoesntExist'])) { echo $_SESSION['userDoesntExist'];}; ?>
+<?php if(!empty($_SESSION['userExist'])) { echo $_SESSION['userExist'];}; ?>
+<?php if(!empty($_SESSION['valueIsNotAValidString'])) { echo $_SESSION['valueIsNotAValidString'];}; ?>
+<?php if(!empty($_SESSION['passwordIsNotValid'])) { echo $_SESSION['passwordIsNotValid'];}; ?>
+<?php if(!empty($_SESSION['differentPassword'])) { echo $_SESSION['differentPassword'];}; ?>
+<?php if(!empty($_SESSION['emailIsNotValid'])) { echo $_SESSION['emailIsNotValid'];}; ?>
+<?php if(!empty($_SESSION['emailExist'])) { echo $_SESSION['emailExist'];}; ?>
 
 
 <form action="/Access/register" method="post">
