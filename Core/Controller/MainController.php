@@ -16,7 +16,9 @@ require_once 'Access/Controller/AccessController.php';
 
 class MainController
 {
-    public function main($controllerName = "home", $methodName = "index") {
+    public function main() {
+        $controllerName = "home";
+        $methodName = "index";
 
         $request = explode("/", $_SERVER['REQUEST_URI']);
         if(isset($request[1]) && !empty($request[1])) { $controllerName = strtolower ($request[1]); };

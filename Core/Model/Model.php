@@ -27,7 +27,7 @@ abstract class Model
 
     public function readAll()
     {
-        $statement = $this->connection->prepare("SELECT * FROM `" . $this->tableName ."`");
+        $statement = $this->connection->prepare("SELECT * FROM `" . $this->tableName);
 
         $statement->execute();
 
