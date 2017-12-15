@@ -35,9 +35,20 @@ abstract class Model
         return $result;
     }
 
+    public function readById($id)
+    {
+        $statement = $this->connection->prepare("SELECT * FROM `" . $this->tableName . "` WHERE id = :id");
+        $statement->bindParam(':id',$id);
+
+        $statement->execute();
+
+        $result = $statement->fetch();
+        return $result;
+    }
+
     public function readByAttribut($attribut, $value)
     {
-        $statement = $this->connection->prepare("SELECT `id` FROM `" . $this->tableName . "` WHERE $attribut = :$attribut");
+        $statement = $this->connection->prepare("SELECT $attribut FROM `" . $this->tableName . "` WHERE $attribut = :$attribut");
         $statement->bindParam(':'.$attribut,$value);
 
         $statement->execute();

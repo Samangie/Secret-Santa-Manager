@@ -31,7 +31,7 @@ class CampaignController extends ComponentController
             $title = $_POST['title'];
             $startdate = $_POST['startdate'];
 
-            $campaign = new Campaign($title, $startdate);
+            $campaign = new Campaign(null, $title, $startdate);
 
             if ($campaign->insert()) {
                 header("Location: /Campaign/");
@@ -83,6 +83,18 @@ class CampaignController extends ComponentController
 
             $this->output("campaign", "participants", $participantEntries);
         }
+    }
+
+    public function assign()
+    {
+        if (isset($_GET['id']) && !empty($_SESSION['role'])) {
+            $campaign_id = $_GET['id'];
+            $campaign = new Campaign($campaign_id);
+            if($campaign->assign()) {
+                header("Location: /Campaign/");
+            }
+        }
+        header("Location: /");
     }
 
 }
