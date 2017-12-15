@@ -71,7 +71,7 @@ class AccessController extends ComponentController
 
     public function logout()
     {
-        if (!empty($_SESSION['username'])) {
+        if (isset($_SESSION['username'])) {
             $user = new User($_SESSION['username']);
             $user->logout();
         }
