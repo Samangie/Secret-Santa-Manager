@@ -17,13 +17,30 @@ class Campaign extends Model
     protected $id;
     protected $title;
     protected $startdate;
+    protected $isAssigned;
 
-    public function __construct($id = null, $title = null, $startdate = null)
+    public function __construct($id = null, $title = null, $startdate = null, $isAssigned = null)
     {
         parent::getConnection();
         $this->id = $id;
         $this->title = $title;
         $this->startdate = $startdate;
+    }
+
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+
+    public function __set($property, $value)
+    {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        }
+
+        return $this;
     }
 
     public function insert()
@@ -47,11 +64,8 @@ class Campaign extends Model
        /* if ($this->startdate != $currentDate) {
             return false;
         }*/
+
         $assignedUser = new AssignedUser($this->id);
-        if(!$assignedUser->readByAttribut('campaign_id', $this->id)) {
-            $_SESSION['assignedAlready']   = "Die Teilnehmer wurden bereits zugewiesen.";
-            return false;
-        }
 
         $campaignUser = new CampaignUser(null, $this->id);
         $allParticipants = $campaignUser->readAllParticipantIds();
@@ -101,6 +115,20 @@ class Campaign extends Model
             $assignedUser->insert();
         }
 
+        $this->isAssigned = 1;
+        $this->updateAttrAssigned();
+
+    }
+
+    public function updateAttrAssigned() {
+        $statement = $this->connection->prepare("UPDATE `" . $this->tableName . "` SET isAssigned = :isAssigned WHERE id = :id");
+
+        $statement->bindParam(':id',$this->id);
+        $statement->bindParam(':isAssigned',$this->isAssigned);
+
+        if ($statement->execute()) {
+            return true;
+        }
     }
 
 }

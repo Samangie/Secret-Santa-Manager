@@ -57,7 +57,20 @@ class CampaignUser extends Model
             $result = $statement->fetchAll();
             return $result;
         }
+    }
 
+    public function checkUserByCampId()
+    {
+        $statement = $this->connection->prepare("SELECT user_id FROM " . $this->tableName . " LEFT JOIN user ON ($this->tableName.user_id = user.id) WHERE campaign_id = :campaign_id AND user.username = :username");
 
+        $statement->bindParam(':campaign_id',$this->campaign_id);
+        $statement->bindParam(':username',$this->username);
+
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return true;
+        }
+        return false;
     }
 }

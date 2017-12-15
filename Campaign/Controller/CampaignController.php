@@ -9,6 +9,7 @@
 include_once 'Core/Controller/ComponentController.php';
 require_once "Campaign/Model/Campaign.php";
 require_once "Campaign/Model/CampaignUser.php";
+require_once "Campaign/lib/CampaignValidator.php";
 
 class CampaignController extends ComponentController
 {
@@ -65,9 +66,12 @@ class CampaignController extends ComponentController
 
             $campaignUser = new CampaignUser($username,$campaign_id);
 
-            $campaignUser->insert();
-
-            header("Location: /Campaign/");
+            $validator = new CampaignValidator();
+            $validator->isValid($campaignUser);
+            if ($validator->userIsAssigned()) {
+                $campaignUser->insert();
+                header("Location: /Campaign/");
+            }
         }
     }
 
@@ -90,11 +94,16 @@ class CampaignController extends ComponentController
         if (isset($_GET['id']) && !empty($_SESSION['role'])) {
             $campaign_id = $_GET['id'];
             $campaign = new Campaign($campaign_id);
-            if($campaign->assign()) {
+
+            $validator = new CampaignValidator();
+            $validator->isValid($campaign);
+            if (!$validator->campaignIsAssigned()) {
+                $campaign->assign();
                 header("Location: /Campaign/");
             }
+            header("Location: /Campaign/showParticipant?id=" . $_GET['id']);
         }
-        header("Location: /");
+        header("Location: /Campaign/");
     }
 
 }
