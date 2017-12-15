@@ -30,7 +30,7 @@ class CampaignUser extends Model
         $statement->bindParam(':username',$this->username);
         $statement->bindParam(':campaign_id',$this->campaign_id);
 
-        if($statement->execute()) {
+        if ($statement->execute()) {
             return true;
         }
     }
@@ -53,7 +53,7 @@ class CampaignUser extends Model
 
         $statement->bindParam(':campaign_id',$this->campaign_id);
 
-        if($statement->execute()) {
+        if ($statement->execute()) {
             $result = $statement->fetchAll();
             return $result;
         }

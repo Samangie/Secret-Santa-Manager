@@ -9,8 +9,8 @@
 
 class View
 {
-    public function display($controllerName, $methodName, $dataFromDB) {
-
+    public function display($controllerName, $methodName, $dataFromDB)
+    {
         if(isset($dataFromDB)) {
             extract($dataFromDB);
         }
@@ -20,7 +20,7 @@ class View
         require_once 'themes/' . $config['themeName'] . '/footer.php';
 
         $path = 'themes/' . $config['themeName'] . '/' . $controllerName . '/' . $controllerName . '_' . $methodName . '.php';
-        if(file_exists($path)) {
+        if (file_exists($path)) {
             include_once('themes/' . $config['themeName'] . '/header.php');
             include_once($path);
             include_once('themes/' . $config['themeName'] . '/footer.php');
@@ -28,5 +28,4 @@ class View
             include_once ('themes/' . $config['themeName'] . '/error.php');
         }
     }
-
 }

@@ -19,7 +19,7 @@ class CampaignValidator extends Validator
     public function campaignIsAssigned()
     {
         $campaign = $this->model->readById($this->model->id);
-        if(!empty($campaign['isAssigned'])) {
+        if (!empty($campaign['isAssigned'])) {
             return true;
         }
 
@@ -27,14 +27,13 @@ class CampaignValidator extends Validator
         return false;
     }
 
-    public function userIsAssigned() {
-
+    public function userIsAssigned()
+    {
         if ($this->model->checkUserByCampId()) {
             $_SESSION['userIsAssigned']   = "Der Teilnehmer wurde bereits angemeldet oder die Teilnahme wurde geschlossen";
             return false;
         }
         return true;
-
     }
 
 }

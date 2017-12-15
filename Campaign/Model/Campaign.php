@@ -75,7 +75,7 @@ class Campaign extends Model
 
         shuffle($allDonees);
 
-        if(sizeof($allParticipants) <= 1) {
+        if (sizeof($allParticipants) <= 1) {
             return false;
         }
 
@@ -107,9 +107,9 @@ class Campaign extends Model
                 $allSantas = array_values($allSantas);
                 $allDonees = array_values($allDonees);
             }
-        }while(sizeof($allSantas));
+        } while (sizeof($allSantas));
 
-        foreach($assignedUserList as $pair) {
+        foreach ($assignedUserList as $pair) {
             $assignedUser->santaId = $pair['santa']['user_id'];
             $assignedUser->doneeId = $pair['donee']['user_id'];
             $assignedUser->insert();
@@ -120,7 +120,8 @@ class Campaign extends Model
 
     }
 
-    public function updateAttrAssigned() {
+    public function updateAttrAssigned()
+    {
         $statement = $this->connection->prepare("UPDATE `" . $this->tableName . "` SET isAssigned = :isAssigned WHERE id = :id");
 
         $statement->bindParam(':id',$this->id);
