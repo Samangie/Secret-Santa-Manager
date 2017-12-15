@@ -17,9 +17,28 @@ class CampaignController extends ComponentController
     {
         if (isset($_SESSION['loggedin'])) {
             $campaign = new Campaign();
-            $camaignEntries = $campaign->readAll();
+            $campaignEntries = $campaign->readAll();
 
-            $this->output("campaign", "index", $camaignEntries);
+            $placeholders = array(
+                array(
+                    "name" => "CAMPAIGNS",
+                    "template" => "allCampaigns_content",
+                    "loop" => true,
+                    "innerPlaceholders" =>
+                        array(
+                            "ID",
+                            "TITLE",
+                            "STARTDATE",
+                            "ISASSIGNED"
+                        ),
+                )
+            );
+
+            $placeholderContent = array(
+                "CAMPAIGNS" =>  $campaignEntries,
+            );
+
+            $this->output("campaign", "index", $placeholders, $placeholderContent);
         } else {
             header("Location: /Access/");
         }

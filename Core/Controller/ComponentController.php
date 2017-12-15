@@ -11,11 +11,9 @@ abstract class ComponentController
 {
     abstract protected function __construct();
 
-    protected function output($controllerName,$methodName, $dataFromDB = null)
+    protected function output($controllerName,$methodName, $placeholders, $placeholderContent)
     {
-        $view = new View();
-        $view->entries = $dataFromDB;
-        $view->display($controllerName,$methodName, $dataFromDB);
+        new View($controllerName,$methodName, $placeholders, $placeholderContent);
     }
 
 }

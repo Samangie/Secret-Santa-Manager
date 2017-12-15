@@ -9,7 +9,12 @@
 
 class View
 {
-    public function display($controllerName, $methodName, $dataFromDB)
+    protected $controllerName;
+    protected $methodName;
+    protected $placeholders;
+    protected $placeholderContent;
+
+    public function display($controllerName,$methodName, $placeholders = null, $placeholderContent = null)
     {
         if(isset($dataFromDB)) {
             extract($dataFromDB);
