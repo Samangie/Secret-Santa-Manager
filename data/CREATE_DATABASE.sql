@@ -26,3 +26,11 @@ CREATE TABLE `user_campaign` (
     CONSTRAINT FK_Campaign FOREIGN KEY (`campaign_id`)
     REFERENCES campaign(`id`) ON DELETE CASCADE
     );
+
+CREATE TABLE `assigned_user` (
+    `campaign_id` INT,
+    `santa_id` INT,
+    `donee_id` INT,
+    CONSTRAINT FK_CampaignAssigned FOREIGN KEY (`campaign_id`)
+    REFERENCES campaign(`id`) ON DELETE CASCADE
+    );
