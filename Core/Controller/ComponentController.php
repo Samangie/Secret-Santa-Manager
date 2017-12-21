@@ -11,7 +11,7 @@ abstract class ComponentController
 {
     abstract protected function index();
 
-    protected function output($controllerName,$methodName, $placeholders = null, $placeholderContent = null)
+    protected function output($controllerName,$methodName, $placeholders = null)
     {
         if(empty($_SESSION['loggedin'])) {
             $linkHref = '/Access/';
@@ -36,7 +36,7 @@ abstract class ComponentController
             )
         );
 
-        new View($controllerName,$methodName, $placeholderContent, $headerPlaceholders, null);
+        new View($controllerName,$methodName, $placeholders, $headerPlaceholders, null);
     }
 
 }

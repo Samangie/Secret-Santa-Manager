@@ -48,7 +48,7 @@ class CampaignValidator extends Validator
     public function userIsAssigned()
     {
         if ($this->model->checkUserByCampId()) {
-            $_SESSION['userIsAssigned']   = 'Der Teilnehmer wurde bereits angemeldet oder die Teilnahme wurde geschlossen';
+            $this->errorMessages  .= 'Der Teilnehmer wurde bereits angemeldet oder die Teilnahme wurde geschlossen';
             return false;
         }
         return true;
@@ -61,7 +61,7 @@ class CampaignValidator extends Validator
         if (sizeof($participantEntries) > 1) {
             return true;
         }
-        $this->errorMessages .= 'Noch nicht genug Teilnehmer vorhanden! <br/>';
+        $this->errorMessages .= 'Es haben sich noch keine Teilnehmer angemeldet <br/>';
         return false;
 
     }

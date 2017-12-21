@@ -82,9 +82,9 @@ class CampaignController extends ComponentController
 
             $campaignUser = new CampaignUser($username,$campaign_id);
 
-            $validator = new CampaignValidator();
-            $validator->isValid($campaignUser);
-            if ($validator->userIsAssigned()) {
+            $validator = new CampaignValidator($campaignUser);
+            $validator->userIsAssigned();
+            if (empty($validator->errorMessages)) {
                 $campaignUser->insert();
                 header('Location: /Campaign/');
             }
@@ -142,10 +142,11 @@ class CampaignController extends ComponentController
             $campaign = new Campaign($campaign_id);
 
             $validator = new CampaignValidator($campaign);
-            if (!$validator->campaignIsAssigned()) {
+            if ($validator->campaignIsAssigned()) {
                 $campaign->assign();
                 header('Location: /Campaign/');
             }
+            die();
             header('Location: /Campaign/showParticipant?id=' . $_GET['id']);
         }
         header('Location: /Campaign/');

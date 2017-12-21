@@ -89,7 +89,6 @@ class Campaign extends Model
                     $keyDonee += 1;
                 }
             }
-            echo var_dump($allSantas);
             if ($allSantas[$keySanta] == $allDonees[$keyDonee]) {
                 array_push($allDonees, $allDonees[$keyDonee]);
                 unset($allDonees[$keyDonee]);
