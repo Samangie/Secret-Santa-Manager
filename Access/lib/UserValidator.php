@@ -14,16 +14,19 @@ class UserValidator extends Validator
 {
     protected $model;
 
-    public function isValid($user, $reppasword = null)
+    public function __construct($model, $additionalProperty = null)
     {
-        $this->model = $user;
+        parent::__construct($model, $additionalProperty);
+    }
 
-        $checkuniqueUsername = $this->uniqueUsername($user->username);
-        $checkUsernameIsString = $this->valueIsString($user->username);
-        $checkPasswordIsValid = true; //$this->passwordIsValid($user->password);
-        $checkComparePasswords = $this->comparePasswords($user->password, $reppasword);
-        $checkEmailIsValid = $this->emailIsValid($user->email);
-        $checkEmailIsUnique = $this->uniqueEmail($user->email);
+    public function isValid($reppasword = null)
+    {
+        $checkuniqueUsername = $this->uniqueUsername($this->model->username);
+        $checkUsernameIsString = $this->valueIsString($this->model->username);
+        $checkPasswordIsValid = true; //$this->passwordIsValid($this->model->password);
+        $checkComparePasswords = $this->comparePasswords($this->model->password, $reppasword);
+        $checkEmailIsValid = $this->emailIsValid($this->model->email);
+        $checkEmailIsUnique = $this->uniqueEmail($this->model->email);
 
         if ($checkuniqueUsername
             && $checkUsernameIsString
@@ -35,8 +38,6 @@ class UserValidator extends Validator
             return true;
         }
     }
-
-
 
     public function uniqueUsername($username)
     {

@@ -103,15 +103,15 @@ class CampaignController extends ComponentController
             $campaignUser = new CampaignUser(null, $campaign_id);
             $participantEntries = $campaignUser->readAllParticipant();
 
-            $campaign = new Campaign();
-            $campaignEntry = $campaign->readById($campaign_id);
+            $campaign = new Campaign($campaign_id);
 
-            if (empty($campaignEntry['isassigned']) && !empty($participantEntries)) {
+            $validator = new CampaignValidator($campaign);
+            $validator->campaignIsAssigned();
+            $validator->hasEnoughUsers();
+            if (empty($validator->errorMessages)) {
                 $assignLink = "<a href='/Campaign/assign?id=" . $campaign_id ."' > Zuweisen </a>";
-            } else if ($participantEntries > 1) {
-                $assignLink = "Noch zu wenige Teilnehmer vorhanden";
             } else {
-                $assignLink = "Wurde bereits zugewiesen";
+                $assignLink = $validator->errorMessages;
             }
             $placeholders = array(
                 array(
@@ -147,8 +147,7 @@ class CampaignController extends ComponentController
             $campaign_id = $_GET['id'];
             $campaign = new Campaign($campaign_id);
 
-            $validator = new CampaignValidator();
-            $validator->isValid($campaign);
+            $validator = new CampaignValidator($campaign);
             if (!$validator->campaignIsAssigned()) {
                 $campaign->assign();
                 header("Location: /Campaign/");

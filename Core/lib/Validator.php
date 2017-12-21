@@ -9,7 +9,11 @@
 
 abstract class Validator
 {
-    public abstract function isValid($model, $additionalProperty = null);
+
+    protected $model;
+    protected $additionalProperty;
+
+    public abstract function __construct($model, $additionalProperty = null);
 
     public function valueIsInteger($value, $lengthMax = 11, $lengthMin = 1)
     {

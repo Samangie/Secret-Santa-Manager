@@ -11,19 +11,37 @@ require_once 'Core/lib/Validator.php';
 
 class CampaignValidator extends Validator
 {
-    public function isValid($campaign, $additionalProperty = null)
+    public $errorMessages;
+
+    public function __construct($model, $additionalProperty = null)
     {
-        $this->model = $campaign;
+        $this->model = $model;
+        $this->additionalProperty = $additionalProperty;
+    }
+
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+
+    public function __set($property, $value)
+    {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        }
+
+        return $this;
     }
 
     public function campaignIsAssigned()
     {
         $campaign = $this->model->readById($this->model->id);
-        if (!empty($campaign['isAssigned'])) {
+        if (empty($campaign['isassigned'])) {
             return true;
         }
-
-        $_SESSION['assignedAlready']   = "Die Teilnehmer wurden bereits zugewiesen.";
+        $this->errorMessages .= "Die Teilnehmer wurden bereits zugewiesen. <br/>";
         return false;
     }
 
@@ -34,6 +52,18 @@ class CampaignValidator extends Validator
             return false;
         }
         return true;
+    }
+
+    public function hasEnoughUsers() {
+        $campaignUser = new CampaignUser(null, $this->model->id);
+        $participantEntries = $campaignUser->readAllParticipant();
+
+        if (sizeof($participantEntries) > 1) {
+            return true;
+        }
+        $this->errorMessages .= "Noch nicht genug Teilnehmer vorhanden! <br/>";
+        return false;
+
     }
 
 }
