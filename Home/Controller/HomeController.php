@@ -9,7 +9,7 @@
 include_once 'Core/Controller/ComponentController.php';
 class HomeController extends ComponentController
 {
-    public function __construct()
+    public function index()
     {
         $this->output("home", "index");
     }

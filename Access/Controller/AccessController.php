@@ -12,7 +12,7 @@ require_once "Access/lib/UserValidator.php";
 
 class AccessController extends ComponentController
 {
-    public function __construct()
+    public function index()
     {
         if (!empty($_SESSION['loggedin'])) {
             header("Location: /");

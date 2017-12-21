@@ -7,13 +7,13 @@
  */
 
 include_once 'Core/Controller/ComponentController.php';
-require_once "Campaign/Model/Campaign.php";
-require_once "Campaign/Model/CampaignUser.php";
-require_once "Campaign/lib/CampaignValidator.php";
+require_once 'Campaign/Model/Campaign.php';
+require_once 'Campaign/Model/CampaignUser.php';
+require_once 'Campaign/lib/CampaignValidator.php';
 
 class CampaignController extends ComponentController
 {
-    public function __construct()
+    public function index()
     {
         if (isset($_SESSION['loggedin'])) {
             $campaign = new Campaign();
@@ -22,7 +22,7 @@ class CampaignController extends ComponentController
             $placeholders = array(
                 array(
                     "name" => "CAMPAIGNS",
-                    "template" => "allCampaigns_content",
+                    "template" => "allCampaigns_content_loop",
                     "loop" => true,
                     "innerPlaceholders" =>
                         array(
@@ -101,10 +101,43 @@ class CampaignController extends ComponentController
             $campaign_id = $_GET['id'];
 
             $campaignUser = new CampaignUser(null, $campaign_id);
-
             $participantEntries = $campaignUser->readAllParticipant();
 
-            $this->output("campaign", "participants", $participantEntries);
+            $campaign = new Campaign();
+            $campaignEntry = $campaign->readById($campaign_id);
+
+            if (empty($campaignEntry['isassigned']) && !empty($participantEntries)) {
+                $assignLink = "<a href='/Campaign/assign?id=" . $campaign_id ."' > Zuweisen </a>";
+            } else if ($participantEntries > 1) {
+                $assignLink = "Noch zu wenige Teilnehmer vorhanden";
+            } else {
+                $assignLink = "Wurde bereits zugewiesen";
+            }
+            $placeholders = array(
+                array(
+                    "name" => "PARTICIPANTS",
+                    "template" => "allParticipants_content_loop",
+                    "loop" => true,
+                    "innerPlaceholders" =>
+                        array(
+                            "USERNAME"
+                        ),
+                ),
+                array(
+                    'name' => 'ASSIGNED',
+                    'template' => '',
+                    'loop' => false,
+                    'innerPlaceholders' => ''
+                )
+            );
+
+            $placeholderContent = array(
+                'PARTICIPANTS' =>  $participantEntries,
+                'ASSIGNED' => $assignLink,
+            );
+
+
+            $this->output("campaign", "participants",$placeholders, $placeholderContent);
         }
     }
 

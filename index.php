@@ -3,7 +3,7 @@
 require_once 'Core/Controller/MainController.php';
 
 $mainController = new MainController();
-
+/*
 $campaign = new Campaign();
 $campaignEntries = $campaign->readAll();
 
@@ -53,3 +53,4 @@ foreach ($placeholders as $placeholder) {
 }
 
 echo $placeholderTemplate;
+*/
