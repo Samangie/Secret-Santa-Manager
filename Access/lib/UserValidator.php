@@ -7,8 +7,8 @@
  * Time: 16:07
  */
 
-require_once "Core/lib/Validator.php";
-require_once "Access/Model/User.php";
+require_once 'Core/lib/Validator.php';
+require_once 'Access/Model/User.php';
 
 class UserValidator extends Validator
 {
@@ -47,7 +47,7 @@ class UserValidator extends Validator
             return true;
         }
 
-        $_SESSION['userExist'] = "Der Benutzername exisitert bereits!";
+        $_SESSION['userExist'] = 'Der Benutzername exisitert bereits!';
         return false;
     }
 
@@ -60,7 +60,7 @@ class UserValidator extends Validator
             return true;
         }
 
-        $_SESSION['passwordIsNotValid'] = "Das Passwort muss zwischen 8 - 25 zeichen lang sein und ein Sonderzeichen sowie eine Zahl enthalten!";
+        $_SESSION['passwordIsNotValid'] = 'Das Passwort muss zwischen 8 - 25 zeichen lang sein und ein Sonderzeichen sowie eine Zahl enthalten!';
 
     }
 
@@ -72,7 +72,7 @@ class UserValidator extends Validator
             return true;
         }
 
-        $_SESSION['differentPassword'] = "Die Passwörter stimmen nicht überein.";
+        $_SESSION['differentPassword'] = 'Die Passwörter stimmen nicht überein.';
         return false;
     }
 
@@ -86,7 +86,7 @@ class UserValidator extends Validator
             return true;
         }
 
-        $_SESSION['emailIsNotValid'] = "Muss eine E-Mail Adresse sein!";
+        $_SESSION['emailIsNotValid'] = 'Muss eine E-Mail Adresse sein!';
 
     }
 
@@ -98,7 +98,7 @@ class UserValidator extends Validator
             return true;
         }
 
-        $_SESSION['emailExist'] = "Die Email wird bereits verwendet!";
+        $_SESSION['emailExist'] = 'Die Email wird bereits verwendet!';
         return false;
 
     }

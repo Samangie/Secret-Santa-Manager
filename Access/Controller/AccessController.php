@@ -7,18 +7,18 @@
  * Time: 08:28
  */
 
-require_once "Access/Model/User.php";
-require_once "Access/lib/UserValidator.php";
+require_once 'Access/Model/User.php';
+require_once 'Access/lib/UserValidator.php';
 
 class AccessController extends ComponentController
 {
     public function index()
     {
         if (!empty($_SESSION['loggedin'])) {
-            header("Location: /");
+            header('Location: /');
         };
 
-        $this->output("access","index");
+        $this->output('access','index');
     }
 
     public function login()
@@ -34,9 +34,9 @@ class AccessController extends ComponentController
             $_SESSION['username'] = $user->username;
             $_SESSION['role'] = $user->role;
             $_SESSION['loggedin'] = true;
-            header("Location: /Campaign/");
+            header('Location: /Campaign/');
         } else {
-            $_SESSION['userDoesntExist'] = "Der Benutzername und das Passwort stimmt nicht überein";
+            $_SESSION['userDoesntExist'] = 'Der Benutzername und das Passwort stimmt nicht überein';
         }
 
         header("Location: /Access/");
@@ -60,12 +60,12 @@ class AccessController extends ComponentController
                     $_SESSION['username'] = $user->username;
                     $_SESSION['role'] = $user->role;
                     $_SESSION['loggedin'] = true;
-                    header("Location: /Campaign/");
+                    header('Location: /Campaign/');
                 }
             }
-            header("Location: /Access/");
+            header('Location: /Access/');
         } else {
-            header("Location: /Access/");
+            header('Location: /Access/');
         }
     }
 
@@ -75,6 +75,6 @@ class AccessController extends ComponentController
             $user = new User($_SESSION['username']);
             $user->logout();
         }
-        header("Location: /");
+        header('Location: /');
     }
 }

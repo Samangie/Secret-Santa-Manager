@@ -45,7 +45,7 @@ class Campaign extends Model
 
     public function insert()
     {
-        $statement = $this->connection->prepare("INSERT INTO `" . $this->tableName . "` (`title`, `startdate`) VALUES (:title, :startdate)");
+        $statement = $this->connection->prepare('INSERT INTO `' . $this->tableName . '` (`title`, `startdate`) VALUES (:title, :startdate)');
 
         $statement->bindParam(':title',$this->title);
         $statement->bindParam(':startdate',$this->startdate);
@@ -122,7 +122,7 @@ class Campaign extends Model
 
     public function updateAttrAssigned()
     {
-        $statement = $this->connection->prepare("UPDATE `" . $this->tableName . "` SET isAssigned = :isAssigned WHERE id = :id");
+        $statement = $this->connection->prepare('UPDATE `' . $this->tableName . '` SET isAssigned = :isAssigned WHERE id = :id');
 
         $statement->bindParam(':id',$this->id);
         $statement->bindParam(':isAssigned',$this->isAssigned);

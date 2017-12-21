@@ -7,7 +7,7 @@
  * Time: 11:26
  */
 
-require_once "Core/Model/Model.php";
+require_once 'Core/Model/Model.php';
 
 class AssignedUser extends Model
 {
@@ -43,7 +43,7 @@ class AssignedUser extends Model
 
     public function insert()
     {
-        $statement = $this->connection->prepare("INSERT INTO `" . $this->tableName . "` (`campaign_id`, `santa_id`, `donee_id`) VALUES (:campaign_id, :santa_id, :donee_id)");
+        $statement = $this->connection->prepare('INSERT INTO `' . $this->tableName . '` (`campaign_id`, `santa_id`, `donee_id`) VALUES (:campaign_id, :santa_id, :donee_id)');
 
         $statement->bindParam(':campaign_id',$this->campaignId);
         $statement->bindParam(':santa_id',$this->santaId);

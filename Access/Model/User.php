@@ -8,7 +8,7 @@
  */
 
 
-require_once "Core/Model/Model.php";
+require_once 'Core/Model/Model.php';
 
 class User extends Model
 {

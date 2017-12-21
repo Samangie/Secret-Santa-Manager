@@ -41,14 +41,14 @@ class CampaignValidator extends Validator
         if (empty($campaign['isassigned'])) {
             return true;
         }
-        $this->errorMessages .= "Die Teilnehmer wurden bereits zugewiesen. <br/>";
+        $this->errorMessages .= 'Die Teilnehmer wurden bereits zugewiesen. <br/>';
         return false;
     }
 
     public function userIsAssigned()
     {
         if ($this->model->checkUserByCampId()) {
-            $_SESSION['userIsAssigned']   = "Der Teilnehmer wurde bereits angemeldet oder die Teilnahme wurde geschlossen";
+            $_SESSION['userIsAssigned']   = 'Der Teilnehmer wurde bereits angemeldet oder die Teilnahme wurde geschlossen';
             return false;
         }
         return true;
@@ -61,7 +61,7 @@ class CampaignValidator extends Validator
         if (sizeof($participantEntries) > 1) {
             return true;
         }
-        $this->errorMessages .= "Noch nicht genug Teilnehmer vorhanden! <br/>";
+        $this->errorMessages .= 'Noch nicht genug Teilnehmer vorhanden! <br/>';
         return false;
 
     }

@@ -21,26 +21,26 @@ class CampaignController extends ComponentController
 
             $placeholders = array(
                 array(
-                    "name" => "CAMPAIGNS",
-                    "template" => "allCampaigns_content_loop",
-                    "loop" => true,
-                    "innerPlaceholders" =>
+                    'name' => 'CAMPAIGNS',
+                    'template' => 'allCampaigns_content_loop',
+                    'loop' => true,
+                    'innerPlaceholders' =>
                         array(
-                            "ID",
-                            "TITLE",
-                            "STARTDATE",
-                            "ISASSIGNED"
+                            'ID',
+                            'TITLE',
+                            'STARTDATE',
+                            'ISASSIGNED'
                         ),
                 )
             );
 
             $placeholderContent = array(
-                "CAMPAIGNS" =>  $campaignEntries,
+                'CAMPAIGNS' =>  $campaignEntries,
             );
 
-            $this->output("campaign", "index", $placeholders, $placeholderContent);
+            $this->output('campaign', 'index', $placeholders, $placeholderContent);
         } else {
-            header("Location: /Access/");
+            header('Location: /Access/');
         }
     }
 
@@ -54,10 +54,10 @@ class CampaignController extends ComponentController
             $campaign = new Campaign(null, $title, $startdate);
 
             if ($campaign->insert()) {
-                header("Location: /Campaign/");
+                header('Location: /Campaign/');
             }
         } else {
-            header("Location: /");
+            header('Location: /');
         }
     }
 
@@ -70,9 +70,9 @@ class CampaignController extends ComponentController
             $campaign = new Campaign();
             $campaign->deleteById($id);
 
-            header("Location: /Campaign/");
+            header('Location: /Campaign/');
         } else {
-            header("Location: /Campaign/");
+            header('Location: /Campaign/');
         }
     }
 
@@ -89,7 +89,7 @@ class CampaignController extends ComponentController
             $validator->isValid($campaignUser);
             if ($validator->userIsAssigned()) {
                 $campaignUser->insert();
-                header("Location: /Campaign/");
+                header('Location: /Campaign/');
             }
         }
     }
@@ -109,18 +109,18 @@ class CampaignController extends ComponentController
             $validator->campaignIsAssigned();
             $validator->hasEnoughUsers();
             if (empty($validator->errorMessages)) {
-                $assignLink = "<a href='/Campaign/assign?id=" . $campaign_id ."' > Zuweisen </a>";
+                $assignLink = '<a href="/Campaign/assign?id=' . $campaign_id .'" > Zuweisen </a>';
             } else {
                 $assignLink = $validator->errorMessages;
             }
             $placeholders = array(
                 array(
-                    "name" => "PARTICIPANTS",
-                    "template" => "allParticipants_content_loop",
-                    "loop" => true,
-                    "innerPlaceholders" =>
+                    'name' => 'PARTICIPANTS',
+                    'template' => 'allParticipants_content_loop',
+                    'loop' => true,
+                    'innerPlaceholders' =>
                         array(
-                            "USERNAME"
+                            'USERNAME'
                         ),
                 ),
                 array(
@@ -137,7 +137,7 @@ class CampaignController extends ComponentController
             );
 
 
-            $this->output("campaign", "participants",$placeholders, $placeholderContent);
+            $this->output('campaign', 'participants',$placeholders, $placeholderContent);
         }
     }
 
@@ -150,11 +150,11 @@ class CampaignController extends ComponentController
             $validator = new CampaignValidator($campaign);
             if (!$validator->campaignIsAssigned()) {
                 $campaign->assign();
-                header("Location: /Campaign/");
+                header('Location: /Campaign/');
             }
-            header("Location: /Campaign/showParticipant?id=" . $_GET['id']);
+            header('Location: /Campaign/showParticipant?id=' . $_GET['id']);
         }
-        header("Location: /Campaign/");
+        header('Location: /Campaign/');
     }
 
 }

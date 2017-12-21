@@ -21,7 +21,7 @@ abstract class Validator
             return true;
         }
 
-        $_SESSION['valueIsNotAnValidInteger'] = "Die Eingabe muss eine Zahl zwischen sein!";
+        $_SESSION['valueIsNotAnValidInteger'] = 'Die Eingabe muss eine Zahl zwischen sein!';
 
         return false;
     }
@@ -32,7 +32,7 @@ abstract class Validator
             return true;
         }
 
-        $_SESSION['valueIsNotAValidString'] = "Die Eingabe muss ein String sein!";
+        $_SESSION['valueIsNotAValidString'] = 'Die Eingabe muss ein String sein!';
 
         return false;
     }
@@ -43,7 +43,7 @@ abstract class Validator
             return true;
         }
 
-        $_SESSION['valueIsNotAValidDate'] = "Die Eingabe muss ein Datum sein!";
+        $_SESSION['valueIsNotAValidDate'] = 'Die Eingabe muss ein Datum sein!';
 
         return false;
     }
