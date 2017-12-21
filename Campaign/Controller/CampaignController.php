@@ -31,14 +31,11 @@ class CampaignController extends ComponentController
                             'STARTDATE',
                             'ISASSIGNED'
                         ),
+                    'placeholderContent' => $campaignEntries,
                 )
             );
 
-            $placeholderContent = array(
-                'CAMPAIGNS' =>  $campaignEntries,
-            );
-
-            $this->output('campaign', 'index', $placeholders, $placeholderContent);
+            $this->output('campaign', 'index', $placeholders);
         } else {
             header('Location: /Access/');
         }
@@ -122,22 +119,19 @@ class CampaignController extends ComponentController
                         array(
                             'USERNAME'
                         ),
+                    'placeholderContent' => $participantEntries
                 ),
                 array(
                     'name' => 'ASSIGNED',
                     'template' => '',
                     'loop' => false,
-                    'innerPlaceholders' => ''
+                    'innerPlaceholders' => '',
+                    'placeholderContent' => $assignLink
                 )
             );
 
-            $placeholderContent = array(
-                'PARTICIPANTS' =>  $participantEntries,
-                'ASSIGNED' => $assignLink,
-            );
 
-
-            $this->output('campaign', 'participants',$placeholders, $placeholderContent);
+            $this->output('campaign', 'participants',$placeholders);
         }
     }
 

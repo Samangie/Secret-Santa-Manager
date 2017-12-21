@@ -37,7 +37,7 @@ class CampaignUser extends Model
 
     public function readAllParticipant()
     {
-        $statement = $this->connection->prepare('SELECT user.username, campaign_id FROM ' . $this->tableName . ' LEFT JOIN user ON ($this->tableName.user_id = user.id) WHERE campaign_id = :campaign_id');
+        $statement = $this->connection->prepare('SELECT user.username, campaign_id FROM ' . $this->tableName . ' LEFT JOIN user ON ('.$this->tableName.'.user_id = user.id) WHERE campaign_id = :campaign_id');
 
         $statement->bindParam(':campaign_id',$this->campaign_id);
 

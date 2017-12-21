@@ -12,14 +12,12 @@ class View
     protected $controllerName;
     protected $methodName;
     protected $placeholders;
-    protected $placeholderContent;
 
-    public function __construct($controllerName,$methodName, $placeholders, $placeholderContent)
+    public function __construct($controllerName,$methodName, $placeholders)
     {
         $this->controllerName = $controllerName;
         $this->methodName = $methodName;
         $this->placeholders = $placeholders;
-        $this->placeholderContent = $placeholderContent;
 
         $this->display();
     }
@@ -40,11 +38,12 @@ class View
                 $templateName = $placeholder['template'];
                 $loop = $placeholder['loop'];
                 $innerPlaceholders = $placeholder['innerPlaceholders'];
+                $placeholderContent = $placeholder['placeholderContent'];
 
                 $contentTemplate = '';
 
                 if ($loop) {
-                    foreach ($this->placeholderContent[$mainPlaceholder] as $entry) {
+                    foreach ($placeholderContent as $entry) {
                         $pathLoop = 'Campaign/lib/templates/' . $templateName . '.html';
                         $loopTemplate = file_get_contents($pathLoop);
                         foreach ($innerPlaceholders as $innerPlaceholder) {
@@ -57,11 +56,11 @@ class View
                         $pathLoop = 'Campaign/lib/templates/' . $templateName . '.html';
                         $template = file_get_contents($pathLoop);
                         foreach ($innerPlaceholders as $innerPlaceholder) {
-                            $template = str_replace('[[' . $innerPlaceholder . ']]', $this->placeholderContent[$mainPlaceholder], $template);
+                            $template = str_replace('[[' . $innerPlaceholder . ']]', $placeholderContent, $template);
                         }
                         $contentTemplate .= $template;
                     }else {
-                        $contentTemplate = $this->placeholderContent[$mainPlaceholder];
+                        $contentTemplate = $placeholderContent;
                     }
                 }
                 $placeholderTemplate = str_replace('[[' . $mainPlaceholder . ']]', $contentTemplate, $placeholderTemplate);
