@@ -13,7 +13,30 @@ abstract class ComponentController
 
     protected function output($controllerName,$methodName, $placeholders = null, $placeholderContent = null)
     {
-        new View($controllerName,$methodName, $placeholders, $placeholderContent);
+        if(empty($_SESSION['loggedin'])) {
+            $linkHref = '/Access/';
+            $linkText = 'Login/ Registrieren';
+        }else {
+            $linkHref = '/Access/logout';
+            $linkText = 'Logout';
+        }
+        $headerPlaceholders = array(
+            array(
+                'name' => 'LOGIN',
+                'template' => 'loginLink',
+                'loop' => false,
+                'innerPlaceholders' => array(
+                    'LINKHREF',
+                    'LINKTEXT',
+                ),
+                'placeholderContent' => array(
+                    'linkhref' => $linkHref,
+                    'linktext' => $linkText,
+                )
+            )
+        );
+
+        new View($controllerName,$methodName, $placeholderContent, $headerPlaceholders, null);
     }
 
 }
