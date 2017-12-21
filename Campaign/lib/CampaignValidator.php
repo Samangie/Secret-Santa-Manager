@@ -11,12 +11,9 @@ require_once 'Core/lib/Validator.php';
 
 class CampaignValidator extends Validator
 {
-    public $errorMessages;
-
-    public function __construct($model, $additionalProperty = null)
+    public function __construct($model)
     {
-        $this->model = $model;
-        $this->additionalProperty = $additionalProperty;
+        parent::__construct($model);
     }
 
     public function __get($property)

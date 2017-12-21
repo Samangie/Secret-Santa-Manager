@@ -53,9 +53,9 @@ class AccessController extends ComponentController
 
             $user = new User($username, $password, $email, $role);
 
-            $validator = new UserValidator();
-
-            if($validator->isValid($user, sha1($reppassword))) {
+            $validator = new UserValidator($user);
+            $validator->isValid(sha1($reppassword));
+            if (empty($validator->getErrorMessages())) {
                 if ($user->insert()) {
                     $_SESSION['username'] = $user->username;
                     $_SESSION['role'] = $user->role;
@@ -63,7 +63,7 @@ class AccessController extends ComponentController
                     header('Location: /Campaign/');
                 }
             }
-            header('Location: /Access/');
+            echo $validator->getErrorMessages();
         } else {
             header('Location: /Access/');
         }

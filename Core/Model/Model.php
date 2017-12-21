@@ -48,7 +48,7 @@ abstract class Model
 
     public function readByAttribut($attribut, $value)
     {
-        $statement = $this->connection->prepare('SELECT' . $attribut . 'FROM `' . $this->tableName . '` WHERE '. $attribut .'= :'.$attribut);
+        $statement = $this->connection->prepare('SELECT ' . $attribut . ' FROM `' . $this->tableName . '` WHERE '. $attribut .'= :'.$attribut);
         $statement->bindParam(':'.$attribut,$value);
 
         $statement->execute();

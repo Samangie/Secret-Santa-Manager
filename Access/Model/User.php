@@ -47,7 +47,7 @@ class User extends Model
 
     public function insert()
     {
-        $statement = $this->connection->prepare("INSERT INTO `" . $this->tableName . "` (`username`, `password`, `email`, `role`) VALUES (:username, :password, :email, :role)");
+        $statement = $this->connection->prepare('INSERT INTO `' . $this->tableName . '` (`username`, `password`, `email`, `role`) VALUES (:username, :password, :email, :role)');
 
         $statement->bindParam(':username',$this->username);
         $statement->bindParam(':password',$this->password);
@@ -62,7 +62,7 @@ class User extends Model
 
     public function login()
     {
-        $statement = $this->connection->prepare("SELECT `username`, `role` FROM `" . $this->tableName . "` WHERE `username` = :username AND `password` = :password");
+        $statement = $this->connection->prepare('SELECT `username`, `role` FROM `' . $this->tableName . '` WHERE `username` = :username AND `password` = :password');
         $statement->bindParam(':username',$this->username);
         $statement->bindParam(':password',$this->password);
 

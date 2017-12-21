@@ -84,7 +84,7 @@ class CampaignController extends ComponentController
 
             $validator = new CampaignValidator($campaignUser);
             $validator->userIsAssigned();
-            if (empty($validator->errorMessages)) {
+            if (empty($validator->getErrorMessages())) {
                 $campaignUser->insert();
                 header('Location: /Campaign/');
             }
@@ -105,10 +105,10 @@ class CampaignController extends ComponentController
             $validator = new CampaignValidator($campaign);
             $validator->campaignIsAssigned();
             $validator->hasEnoughUsers();
-            if (empty($validator->errorMessages)) {
+            if (empty($validator->getErrorMessages())) {
                 $assignLink = '<a href="/Campaign/assign?id=' . $campaign_id .'" > Zuweisen </a>';
             } else {
-                $assignLink = $validator->errorMessages;
+                $assignLink = $validator->getErrorMessages();
             }
             $placeholders = array(
                 array(

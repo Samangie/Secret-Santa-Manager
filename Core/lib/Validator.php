@@ -7,13 +7,20 @@
  * Time: 15:12
  */
 
-abstract class Validator
+class Validator
 {
 
     protected $model;
-    protected $additionalProperty;
+    protected $errorMessages;
 
-    public abstract function __construct($model, $additionalProperty = null);
+    public function __construct($model) {
+        $this->model = $model;
+    }
+
+    public function getErrorMessages()
+    {
+        return $this->errorMessages;
+    }
 
     public function valueIsInteger($value, $lengthMax = 11, $lengthMin = 1)
     {
@@ -21,7 +28,7 @@ abstract class Validator
             return true;
         }
 
-        $_SESSION['valueIsNotAnValidInteger'] = 'Die Eingabe muss eine Zahl zwischen sein!';
+        $this->errorMessages .= 'Die Eingabe muss eine Zahl zwischen sein!';
 
         return false;
     }
@@ -32,7 +39,7 @@ abstract class Validator
             return true;
         }
 
-        $_SESSION['valueIsNotAValidString'] = 'Die Eingabe muss ein String sein!';
+        $this->errorMessages .= 'Die Eingabe muss ein String sein!';
 
         return false;
     }
@@ -43,7 +50,7 @@ abstract class Validator
             return true;
         }
 
-        $_SESSION['valueIsNotAValidDate'] = 'Die Eingabe muss ein Datum sein!';
+        $this->errorMessages .= 'Die Eingabe muss ein Datum sein!';
 
         return false;
     }
