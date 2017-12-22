@@ -20,9 +20,10 @@ class User extends Model
     protected $email;
     protected $role;
 
-    public function __construct($username, $password = null, $email = null, $role = null)
+    public function __construct($id = null, $username, $password = null, $email = null, $role = null)
     {
         parent::getConnection();
+        $this->id = $id;
         $this->username = $username;
         $this->password = sha1($password);
         $this->email = $email;
@@ -43,6 +44,11 @@ class User extends Model
         }
 
         return $this;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
     }
 
     public function insert()

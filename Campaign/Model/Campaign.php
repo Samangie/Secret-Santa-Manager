@@ -18,6 +18,7 @@ class Campaign extends Model
     protected $title;
     protected $startdate;
     protected $isAssigned;
+    protected $users = array();
 
     public function __construct($id = null, $title = null, $startdate = null, $isAssigned = null)
     {
@@ -131,4 +132,19 @@ class Campaign extends Model
         }
     }
 
+    public function getUsersByCampaign()
+    {
+        $statement = $this->connection->prepare('SELECT user_campaign.user_id, user.username FROM `user_campaign` 
+                                                 LEFT JOIN user ON (user_campaign.user_id = user.id ) 
+                                                 WHERE campaign_id = :campaign_id');
+
+        $statement->bindParam(':campaign_id',$this->id);
+        $statement->execute();
+        $results = $statement->fetchAll();
+
+        foreach ($results as $result) {
+            array_push($this->users, new User($result['user_id'], $result['username']));
+        }
+        return $this->users;
+    }
 }

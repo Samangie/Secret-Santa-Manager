@@ -116,6 +116,13 @@ class CampaignController extends ComponentController
             $campaignUser = new CampaignUser(null, $campaign_id);
             $participantEntries = $campaignUser->readAllParticipant();
 
+            $c = new Campaign(2);
+            $blas = $c->getUsersByCampaign();
+            foreach ($blas as $bla) {
+                echo($bla->getUsername());
+                echo "<br/>";
+            }
+
             $campaign = new Campaign($campaign_id);
 
             $validator = new CampaignValidator($campaign);

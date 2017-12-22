@@ -28,7 +28,7 @@ class AccessController extends ComponentController
             $password = $_POST['password'];
         }
 
-        $user = new User($username, $password);
+        $user = new User(null, $username, $password);
 
         if ($user->login()) {
             $_SESSION['username'] = $user->username;
@@ -51,7 +51,7 @@ class AccessController extends ComponentController
             $email = $_POST['email'];
             $role = $_POST['role'];
 
-            $user = new User($username, $password, $email, $role);
+            $user = new User(null, $username, $password, $email, $role);
 
             $validator = new UserValidator($user);
             $validator->isValid(sha1($reppassword));
@@ -72,7 +72,7 @@ class AccessController extends ComponentController
     public function logout()
     {
         if (isset($_SESSION['username'])) {
-            $user = new User($_SESSION['username']);
+            $user = new User(null, $_SESSION['username']);
             $user->logout();
         }
         header('Location: /');
