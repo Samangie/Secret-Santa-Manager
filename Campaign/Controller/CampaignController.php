@@ -27,6 +27,13 @@ class CampaignController extends ComponentController
 
             $placeholders = array(
                 array(
+                    'name' => 'CAMPAIGNS_CREATE',
+                    'template' => 'campaigns_create_form',
+                    'type' => false,
+                    'innerPlaceholders' => '',
+                    'placeholderContent' => '',
+                ),
+                array(
                     'name' => 'CAMPAIGNS',
                     'template' => 'allCampaigns_content_loop',
                     'type' => 'loop',
@@ -102,9 +109,11 @@ class CampaignController extends ComponentController
             $validator->userIsAssigned();
             if (empty($validator->getErrorMessages())) {
                 $campaignUser->insert();
+                $_SESSION['userAdded'] = 'Sie haben sich für die Kampanie angemeldet';
                 header('Location: /Campaign/');
             }
         }
+        header('Location: /Campaign/');
     }
 
     public function showParticipant()
@@ -122,7 +131,7 @@ class CampaignController extends ComponentController
             $validator->campaignIsAssigned();
             $validator->hasEnoughUsers();
             if (empty($validator->getErrorMessages())) {
-                $assignLink = '<a href="/Campaign/assign?id=' . $campaign_id .'" > Zuweisen </a>';
+                $assignLink = '<a href="/Campaign/assign?id=' . $campaign_id .'" class="btn btn-primary"> Zuweisen </a><br/><br/>';
             } else {
                 $assignLink = $validator->getErrorMessages();
             }
