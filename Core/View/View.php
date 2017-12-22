@@ -45,7 +45,7 @@ class View
         if (!empty($this->contentPlaceholders)) {
             $contentTemplate = $this->fillPlaceholdersWithContent($contentTemplate, $this->contentPlaceholders);
         }
-        echo $contentTemplate;
+        print $contentTemplate;
     }
 
     protected function loadHeader()
@@ -57,7 +57,7 @@ class View
             $headerTemplate = $this->fillPlaceholdersWithContent($headerTemplate, $this->headerPlaceholders, 'Core');
         }
 
-        echo $headerTemplate;
+        print $headerTemplate;
     }
 
     protected function loadFooter()
@@ -68,7 +68,7 @@ class View
         if (!empty($this->footerPlaceholders)) {
             $footerTemplate = $this->fillPlaceholdersWithContent($footerTemplate, $this->footerPlaceholders, 'Core');
         }
-        echo $footerTemplate;
+        print $footerTemplate;
     }
 
     protected function fillPlaceholdersWithContent($fileTemplate, $placeholders, $module = null)
@@ -76,39 +76,50 @@ class View
         if (empty($module)) {
             $module = $this->controllerName;
         }
-
         foreach ($placeholders as $placeholder) {
             $mainPlaceholder = $placeholder['name'];
             $templateName = $placeholder['template'];
-            $loop = $placeholder['loop'];
+            $type = $placeholder['type'];
             $innerPlaceholders = $placeholder['innerPlaceholders'];
             $placeholderContent = $placeholder['placeholderContent'];
 
             $contentTemplate = '';
 
-            if ($loop) {
+            if ($type == 'loop') {
                 foreach ($placeholderContent as $entry) {
                     $pathLoop = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
                     $loopTemplate = file_get_contents($pathLoop);
                     foreach ($innerPlaceholders as $innerPlaceholder) {
-                        $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', $entry[strtolower($innerPlaceholder)], $loopTemplate);
+                        $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($entry[strtolower($innerPlaceholder)]), $loopTemplate);
                     }
                     $contentTemplate .= $loopTemplate;
                 }
-            } else {
+                $fileTemplate = str_replace('[[' . $mainPlaceholder . ']]', $contentTemplate, $fileTemplate);
+            } else if ($type == 'area') {
+                $startPlaceholder = '<'. $mainPlaceholder .'>';
+                $endPlaceholder = '</'. $mainPlaceholder .'>';
+                if ($placeholderContent['isTrue']) {
+                    $newContent = $placeholderContent['replace'];
+                    $contentTemplate = preg_replace('#(' . preg_quote($startPlaceholder) . ')(.*?)(' . preg_quote($endPlaceholder) . ')#si', '$1' . $newContent . '$3', $fileTemplate);
+                    $fileTemplate = $contentTemplate;
+                }
+
+            }
+            else {
                 if(!empty($innerPlaceholders)) {
                     $pathPlaceholder = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
                     $templatePlaceholder = file_get_contents($pathPlaceholder);
                     foreach ($innerPlaceholders as $innerPlaceholder) {
-                        $templatePlaceholder = str_replace('[[' . $innerPlaceholder . ']]', $placeholderContent[strtolower($innerPlaceholder)], $templatePlaceholder);
+                        $templatePlaceholder = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($placeholderContent[strtolower($innerPlaceholder)]), $templatePlaceholder);
                     }
                     $contentTemplate .= $templatePlaceholder;
                 }else {
                     $contentTemplate = $placeholderContent;
                 }
+                $fileTemplate = str_replace('[[' . $mainPlaceholder . ']]', $contentTemplate, $fileTemplate);
             }
-            $fileTemplate = str_replace('[[' . $mainPlaceholder . ']]', $contentTemplate, $fileTemplate);
         }
+
         return $fileTemplate;
     }
 }

@@ -19,11 +19,17 @@ class CampaignController extends ComponentController
             $campaign = new Campaign();
             $campaignEntries = $campaign->readAll();
 
+            if (empty($_SESSION['role'])) {
+                $hasNoRights = true;
+            } else {
+                $hasNoRights = false;
+            }
+
             $placeholders = array(
                 array(
                     'name' => 'CAMPAIGNS',
                     'template' => 'allCampaigns_content_loop',
-                    'loop' => true,
+                    'type' => 'loop',
                     'innerPlaceholders' =>
                         array(
                             'ID',
@@ -32,7 +38,17 @@ class CampaignController extends ComponentController
                             'ISASSIGNED'
                         ),
                     'placeholderContent' => $campaignEntries,
-                )
+                ),
+                array(
+                    'name' => 'RIGHTS',
+                    'template' => '',
+                    'type' => 'area',
+                    'innerPlaceholders' => '',
+                    'placeholderContent' => array(
+                        'isTrue' => $hasNoRights,
+                        'replace' => ''
+                    ),
+                ),
             );
 
             $this->output('campaign', 'index', $placeholders);
@@ -110,11 +126,18 @@ class CampaignController extends ComponentController
             } else {
                 $assignLink = $validator->getErrorMessages();
             }
+
+            if (empty($_SESSION['role'])) {
+                $hasNoRights = true;
+            } else {
+                $hasNoRights = false;
+            }
+
             $placeholders = array(
                 array(
                     'name' => 'PARTICIPANTS',
                     'template' => 'allParticipants_content_loop',
-                    'loop' => true,
+                    'type' => 'loop',
                     'innerPlaceholders' =>
                         array(
                             'USERNAME'
@@ -124,10 +147,20 @@ class CampaignController extends ComponentController
                 array(
                     'name' => 'ASSIGNED',
                     'template' => '',
-                    'loop' => false,
+                    'type' => false,
                     'innerPlaceholders' => '',
                     'placeholderContent' => $assignLink
-                )
+                ),
+                array(
+                    'name' => 'RIGHTS',
+                    'template' => '',
+                    'type' => 'area',
+                    'innerPlaceholders' => '',
+                    'placeholderContent' => array(
+                        'isTrue' => $hasNoRights,
+                        'replace' => ''
+                    ),
+                ),
             );
 
 

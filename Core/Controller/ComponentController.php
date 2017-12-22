@@ -24,7 +24,7 @@ abstract class ComponentController
             array(
                 'name' => 'LOGIN',
                 'template' => 'loginLink',
-                'loop' => false,
+                'type' => false,
                 'innerPlaceholders' => array(
                     'LINKHREF',
                     'LINKTEXT',
@@ -32,8 +32,8 @@ abstract class ComponentController
                 'placeholderContent' => array(
                     'linkhref' => $linkHref,
                     'linktext' => $linkText,
-                )
-            )
+                ),
+            ),
         );
 
         new View($controllerName,$methodName, $placeholders, $headerPlaceholders, null);
