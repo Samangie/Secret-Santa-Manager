@@ -62,8 +62,14 @@ class User extends Model
 
     public function login()
     {
-        $statement = $this->connection->prepare('SELECT `username`, `role` FROM `' . $this->tableName . '` WHERE `username` = :username AND `password` = :password');
-        $statement->bindParam(':username',$this->username);
+        if (empty($this->username)) {
+            $statement = $this->connection->prepare('SELECT `username`, `role` FROM `' . $this->tableName . '` WHERE `email` = :email AND `password` = :password');
+            $statement->bindParam(':email',$this->email);
+        } else {
+            $statement = $this->connection->prepare('SELECT `username`, `role` FROM `' . $this->tableName . '` WHERE `username` = :username AND `password` = :password');
+            $statement->bindParam(':username',$this->username);
+        }
+
         $statement->bindParam(':password',$this->password);
 
         $statement->execute();

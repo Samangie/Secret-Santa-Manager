@@ -107,7 +107,10 @@ class CampaignController extends ComponentController
 
             $validator = new CampaignValidator($campaignUser);
             $validator->userIsAssigned();
-            if (empty($validator->getErrorMessages())) {
+            $campaign = new Campaign($campaign_id);
+            $validatorCampaign = new CampaignValidator($campaign);
+            $validatorCampaign->campaignIsAssigned();
+            if (empty($validator->getErrorMessages()) && empty($validatorCampaign->getErrorMessages())) {
                 $campaignUser->insert();
                 $_SESSION['userAdded'] = 'Sie haben sich für die Kampanie angemeldet';
                 header('Location: /Campaign/');
@@ -184,7 +187,8 @@ class CampaignController extends ComponentController
             $campaign = new Campaign($campaign_id);
 
             $validator = new CampaignValidator($campaign);
-            if ($validator->campaignIsAssigned()) {
+            $validator->campaignIsAssigned();
+            if (empty($validator->getErrorMessages())) {
                 $campaign->assign();
                 header('Location: /Campaign/');
             }
