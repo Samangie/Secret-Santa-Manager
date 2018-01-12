@@ -17,9 +17,8 @@ class AssignedUser extends Model
     protected $santaId;
     protected $doneeId;
 
-    public function __construct($campaign_id = null, $santaId = null, $doneeId = null)
+    public function __construct($campaign_id = 0, $santaId = 0, $doneeId = 0)
     {
-        parent::getConnection();
         $this->campaignId = $campaign_id;
         $this->santaId = $santaId;
         $this->doneeId = $doneeId;
@@ -30,6 +29,8 @@ class AssignedUser extends Model
         if (property_exists($this, $property)) {
             return $this->$property;
         }
+
+        return false;
     }
 
     public function __set($property, $value)
@@ -37,13 +38,11 @@ class AssignedUser extends Model
         if (property_exists($this, $property)) {
             $this->$property = $value;
         }
-
-        return $this;
     }
 
     public function insert()
     {
-        $statement = $this->connection->prepare('INSERT INTO `' . $this->tableName . '` (`campaign_id`, `santa_id`, `donee_id`) VALUES (:campaign_id, :santa_id, :donee_id)');
+        $statement = $this::getConnection()->prepare('INSERT INTO `' . $this->tableName . '` (`campaign_id`, `santa_id`, `donee_id`) VALUES (:campaign_id, :santa_id, :donee_id)');
 
         $statement->bindParam(':campaign_id',$this->campaignId);
         $statement->bindParam(':santa_id',$this->santaId);

@@ -21,7 +21,6 @@ class Campaign extends Model
 
     public function __construct($id = null, $title = null, $startdate = null, $isAssigned = null)
     {
-        parent::getConnection();
         $this->id = $id;
         $this->title = $title;
         $this->startdate = $startdate;
@@ -32,6 +31,8 @@ class Campaign extends Model
         if (property_exists($this, $property)) {
             return $this->$property;
         }
+
+        return false;
     }
 
     public function __set($property, $value)
@@ -39,13 +40,11 @@ class Campaign extends Model
         if (property_exists($this, $property)) {
             $this->$property = $value;
         }
-
-        return $this;
     }
 
     public function insert()
     {
-        $statement = $this->connection->prepare('INSERT INTO `' . $this->tableName . '` (`title`, `startdate`) VALUES (:title, :startdate)');
+        $statement = $this::getConnection()->prepare('INSERT INTO `' . $this->tableName . '` (`title`, `startdate`) VALUES (:title, :startdate)');
 
         $statement->bindParam(':title',$this->title);
         $statement->bindParam(':startdate',$this->startdate);
@@ -121,7 +120,7 @@ class Campaign extends Model
 
     public function updateAttrAssigned()
     {
-        $statement = $this->connection->prepare('UPDATE `' . $this->tableName . '` SET isAssigned = :isAssigned WHERE id = :id');
+        $statement = $this::getConnection()->prepare('UPDATE `' . $this->tableName . '` SET isAssigned = :isAssigned WHERE id = :id');
 
         $statement->bindParam(':id',$this->id);
         $statement->bindParam(':isAssigned',$this->isAssigned);

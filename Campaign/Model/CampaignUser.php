@@ -18,14 +18,13 @@ class CampaignUser extends Model
 
     public function __construct($username = null, $campaign_id = null)
     {
-        parent::getConnection();
         $this->username = $username;
         $this->campaign_id = $campaign_id;
     }
 
     public function insert()
     {
-        $statement = $this->connection->prepare('INSERT INTO `' . $this->tableName . '` (`user_id`, `campaign_id`) VALUES ((SELECT id FROM user WHERE username = :username), :campaign_id)');
+        $statement = $this::getConnection()->prepare('INSERT INTO `' . $this->tableName . '` (`user_id`, `campaign_id`) VALUES ((SELECT id FROM user WHERE username = :username), :campaign_id)');
 
         $statement->bindParam(':username',$this->username);
         $statement->bindParam(':campaign_id',$this->campaign_id);
@@ -37,7 +36,7 @@ class CampaignUser extends Model
 
     public function readAllParticipant()
     {
-        $statement = $this->connection->prepare('SELECT user.username, campaign_id FROM ' . $this->tableName . ' LEFT JOIN user ON ('.$this->tableName.'.user_id = user.id) WHERE campaign_id = :campaign_id');
+        $statement = $this::getConnection()->prepare('SELECT user.username, campaign_id FROM ' . $this->tableName . ' LEFT JOIN user ON ('.$this->tableName.'.user_id = user.id) WHERE campaign_id = :campaign_id');
 
         $statement->bindParam(':campaign_id',$this->campaign_id);
 
@@ -49,7 +48,7 @@ class CampaignUser extends Model
 
     public function readAllParticipantIds()
     {
-        $statement = $this->connection->prepare('SELECT user_id FROM ' . $this->tableName . ' WHERE campaign_id = :campaign_id');
+        $statement = $this::getConnection()->prepare('SELECT user_id FROM ' . $this->tableName . ' WHERE campaign_id = :campaign_id');
 
         $statement->bindParam(':campaign_id',$this->campaign_id);
 
@@ -61,7 +60,7 @@ class CampaignUser extends Model
 
     public function checkUserByCampId()
     {
-        $statement = $this->connection->prepare('SELECT user_id FROM ' . $this->tableName . ' LEFT JOIN user ON ('.$this->tableName.'.user_id = user.id ) WHERE campaign_id = :campaign_id AND user.username = :username');
+        $statement = $this::getConnection()->prepare('SELECT user_id FROM ' . $this->tableName . ' LEFT JOIN user ON ('.$this->tableName.'.user_id = user.id ) WHERE campaign_id = :campaign_id AND user.username = :username');
 
         $statement->bindParam(':campaign_id',$this->campaign_id);
         $statement->bindParam(':username',$this->username);
