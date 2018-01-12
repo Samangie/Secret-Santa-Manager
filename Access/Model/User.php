@@ -20,7 +20,7 @@ class User extends Model
     protected $email;
     protected $role;
 
-    public function __construct($username, $password = null, $email = null, $role = null)
+    public function __construct($username, $password = '', $email = '', $role = 0)
     {
         $this->username = $username;
         $this->password = sha1($password);

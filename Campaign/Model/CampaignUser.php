@@ -16,7 +16,7 @@ class CampaignUser extends Model
     protected $username;
     protected $campaign_id;
 
-    public function __construct($username = null, $campaign_id = null)
+    public function __construct($username = '', $campaign_id = 0)
     {
         $this->username = $username;
         $this->campaign_id = $campaign_id;

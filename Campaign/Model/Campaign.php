@@ -19,7 +19,7 @@ class Campaign extends Model
     protected $startdate;
     protected $isAssigned;
 
-    public function __construct($id = null, $title = null, $startdate = null, $isAssigned = null)
+    public function __construct($id = 0, $title = '', $startdate = null, $isAssigned = 0)
     {
         $this->id = $id;
         $this->title = $title;
