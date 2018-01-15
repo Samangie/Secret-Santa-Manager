@@ -109,23 +109,26 @@ class View
                     $fileTemplate = $contentTemplate;
                 }
 
-            }
-            else {
-                if(!empty($innerPlaceholders)) {
+            } else {
+                if (!empty($innerPlaceholders)) {
                     $pathPlaceholder = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
                     $templatePlaceholder = file_get_contents($pathPlaceholder);
                     foreach ($innerPlaceholders as $innerPlaceholder) {
                         $templatePlaceholder = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($placeholderContent[strtolower($innerPlaceholder)]), $templatePlaceholder);
                     }
                     $contentTemplate .= $templatePlaceholder;
-                }else {
-                    $contentTemplate = $placeholderContent;
+                } else {
+                    if (empty($placeholderContent)) {
+                        $pathPlaceholder = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
+                        $templatePlaceholder = file_get_contents($pathPlaceholder);
+                        $contentTemplate = $templatePlaceholder;
+                    } else {
+                        $contentTemplate = $placeholderContent;
+                    }
                 }
                 $fileTemplate = str_replace('[[' . $mainPlaceholder . ']]', $contentTemplate, $fileTemplate);
             }
         }
-
         return $fileTemplate;
     }
 }
-

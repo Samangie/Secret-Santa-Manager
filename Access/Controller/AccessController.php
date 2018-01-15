@@ -28,12 +28,18 @@ class AccessController extends ComponentController
             $password = $_POST['password'];
         }
 
-        $user = new User(null, $username, $password);
+        $validator = new UserValidator(new User($username, $password));
+        if ($validator->emailIsValid($username)) {
+            $user = new User(0, null, $password, $username);
+        } else {
+            $user = new User(0, $username, $password);
+        }
 
         if ($user->login()) {
-            $_SESSION['username'] = $user->username;
-            $_SESSION['role'] = $user->role;
+            $_SESSION['username'] = $user->getUsername();
+            $_SESSION['role'] = $user->getRole();
             $_SESSION['loggedin'] = true;
+
             header('Location: /Campaign/');
         } else {
             $_SESSION['userDoesntExist'] = 'Der Benutzername und das Passwort stimmt nicht überein';
@@ -57,8 +63,8 @@ class AccessController extends ComponentController
             $validator->isValid(sha1($reppassword));
             if (empty($validator->getErrorMessages())) {
                 if ($user->insert()) {
-                    $_SESSION['username'] = $user->username;
-                    $_SESSION['role'] = $user->role;
+                    $_SESSION['username'] = $user->getUsername();
+                    $_SESSION['role'] = $user->getRole();
                     $_SESSION['loggedin'] = true;
                     header('Location: /Campaign/');
                 }

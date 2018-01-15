@@ -53,10 +53,10 @@ class CampaignValidator extends Validator
 
     public function hasEnoughUsers() {
         $participantEntries = $this->model->getUsersIdsByCampaignId();
-        if (sizeof($participantEntries) > 1) {
+        if (sizeof($participantEntries) > 2) {
             return true;
         }
-        $this->errorMessages .= 'Es haben sich noch keine Teilnehmer angemeldet <br/>';
+        $this->errorMessages .= 'Es haben sich noch nicht genug Teilnehmer angemeldet <br/>';
         return false;
 
     }

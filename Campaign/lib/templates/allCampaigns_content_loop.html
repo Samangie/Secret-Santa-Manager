@@ -1,10 +1,20 @@
-ID: [[ID]]<br/>
-TITLE: [[TITLE]]<br/>
-STARTDATE: [[STARTDATE]]<br/>
-ISASSIGNED: [[ISASSIGNED]]<br/>
-<a href="/Campaign/addParticipant?id=[[ID]]">Anmelden</a><br/>
-<RIGHTS>
-<a href="/Campaign/showParticipant?id=[[ID]]">Teilnehmer anzeigen</a><br/>
-<a href="/Campaign/delete?id=[[ID]]">Löschen</a><br/>
-</RIGHTS>
-<br/><br/>
+<div class="col-lg-4 col-md-6 col-sm-12 mb-2 pl-1 pr-1">
+    <div class="card col-12">
+        <div class="card-block">
+            <RIGHTS>
+                <a href="/Campaign/delete?id=[[ID]]"><i class="fa fa-trash" aria-hidden="true"></i></a>
+            </RIGHTS>
+            <h4 class="card-title">[[TITLE]]</h4>
+            Startdatum: [[STARTDATE]]<br/>
+            Zugewiesen: [[ISASSIGNED]]<br/><br/>
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <a href="/Campaign/addParticipant?id=[[ID]]" class="btn btn-primary">Anmelden</a>
+                </div>
+                <div class="col-md-6 col-sm-12 px-0 py-2">
+                    <a href="/Campaign/showParticipant?id=[[ID]]">Teilnehmer anzeigen</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

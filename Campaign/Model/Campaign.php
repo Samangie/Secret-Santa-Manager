@@ -19,9 +19,8 @@ class Campaign extends Model
     protected $isAssigned;
     protected $users = array();
 
-    public function __construct($id = null, $title = null, $startdate = null, $isAssigned = null)
+    public function __construct($id = 0, $title = '', $startdate = null, $isAssigned = 0)
     {
-        parent::getConnection();
         $this->id = $id;
         $this->title = $title;
         $this->startdate = $startdate;
@@ -32,6 +31,7 @@ class Campaign extends Model
         if (property_exists($this, $property)) {
             return $this->$property;
         }
+        return false;
     }
 
     public function setUser($user)
@@ -41,7 +41,7 @@ class Campaign extends Model
 
     public function insert()
     {
-        $statement = $this->connection->prepare('INSERT INTO `' . $this->tableName . '` (`title`, `startdate`) VALUES (:title, :startdate)');
+        $statement = $this::getConnection()->prepare('INSERT INTO `' . $this->tableName . '` (`title`, `startdate`) VALUES (:title, :startdate)');
 
         $statement->bindParam(':title',$this->title);
         $statement->bindParam(':startdate',$this->startdate);
@@ -113,7 +113,7 @@ class Campaign extends Model
 
     public function updateAttrAssigned()
     {
-        $statement = $this->connection->prepare('UPDATE `' . $this->tableName . '` SET isAssigned = :isAssigned WHERE id = :id');
+        $statement = $this::getConnection()->prepare('UPDATE `' . $this->tableName . '` SET isAssigned = :isAssigned WHERE id = :id');
 
         $statement->bindParam(':id',$this->id);
         $statement->bindParam(':isAssigned',$this->isAssigned);
@@ -125,7 +125,7 @@ class Campaign extends Model
 
     public function getUsersIdsByCampaignId()
     {
-        $statement = $this->connection->prepare('SELECT `user_id` FROM `user_campaign` WHERE `campaign_id` = :campaign_id' );
+        $statement = $this::getConnection()->prepare('SELECT `user_id` FROM `user_campaign` WHERE `campaign_id` = :campaign_id' );
 
         $statement->bindParam(':campaign_id',$this->id);
         $statement->execute();
@@ -136,7 +136,7 @@ class Campaign extends Model
 
     public function getUsersByCampaignId()
     {
-        $statement = $this->connection->prepare('SELECT `user_campaign`.`user_id`, `user`.`username` FROM `user_campaign` 
+        $statement = $this::getConnection()->prepare('SELECT `user_campaign`.`user_id`, `user`.`username` FROM `user_campaign` 
                                                  LEFT JOIN user ON (`user_campaign`.`user_id` = `user`.`id` ) 
                                                  WHERE `campaign_id` = :campaign_id');
 
@@ -154,7 +154,7 @@ class Campaign extends Model
     {
         foreach ($this->users as $user) {
             $username = $user->getUsername();
-            $statement = $this->connection->prepare('INSERT INTO `user_campaign` (`user_id`, `campaign_id`) VALUES ((SELECT `id` FROM `user` WHERE `username` = :username), :campaign_id)');
+            $statement = $this::getConnection()->prepare('INSERT INTO `user_campaign` (`user_id`, `campaign_id`) VALUES ((SELECT `id` FROM `user` WHERE `username` = :username), :campaign_id)');
 
             $statement->bindParam(':username',$username);
             $statement->bindParam(':campaign_id',$this->id);
@@ -169,7 +169,7 @@ class Campaign extends Model
     {
         foreach ($this->users as $user) {
             $username = $user->getUsername();
-            $statement = $this->connection->prepare('SELECT `user_campaign`.`user_id` FROM `user_campaign` 
+            $statement = $this::getConnection()->prepare('SELECT `user_campaign`.`user_id` FROM `user_campaign` 
                                                  LEFT JOIN user ON (`user_campaign`.`user_id` = `user`.`id` ) 
                                                  WHERE `campaign_id` = :campaign_id AND `user`.`username` = :username');
 
@@ -187,7 +187,7 @@ class Campaign extends Model
 
     public function insertAssignedUserPair($santaId, $doneeId)
     {
-        $statement = $this->connection->prepare('INSERT INTO `assigned_user` (`campaign_id`, `santa_id`, `donee_id`) VALUES (:campaign_id, :santa_id, :donee_id)');
+        $statement = $this::getConnection()->prepare('INSERT INTO `assigned_user` (`campaign_id`, `santa_id`, `donee_id`) VALUES (:campaign_id, :santa_id, :donee_id)');
 
         $statement->bindParam(':campaign_id',$this->id);
         $statement->bindParam(':santa_id',$santaId);
