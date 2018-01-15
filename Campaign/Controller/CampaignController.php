@@ -114,16 +114,10 @@ class CampaignController extends ComponentController
             $campaign_id = $_GET['id'];
 
             $campaignUser = new CampaignUser(null, $campaign_id);
-            $participantEntries = $campaignUser->readAllParticipant();
-
-            $c = new Campaign(2);
-            $blas = $c->getUsersByCampaign();
-            foreach ($blas as $bla) {
-                echo($bla->getUsername());
-                echo "<br/>";
-            }
+            //$participantEntries = $campaignUser->readAllParticipant();
 
             $campaign = new Campaign($campaign_id);
+            $participantEntries = $campaign->getUsersByCampaign();
 
             $validator = new CampaignValidator($campaign);
             $validator->campaignIsAssigned();
@@ -144,7 +138,7 @@ class CampaignController extends ComponentController
                 array(
                     'name' => 'PARTICIPANTS',
                     'template' => 'allParticipants_content_loop',
-                    'type' => 'loop',
+                    'type' => 'object-loop',
                     'innerPlaceholders' =>
                         array(
                             'USERNAME'

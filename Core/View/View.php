@@ -85,12 +85,17 @@ class View
 
             $contentTemplate = '';
 
-            if ($type == 'loop') {
+            if ($type == 'loop' || $type == 'object-loop') {
                 foreach ($placeholderContent as $entry) {
                     $pathLoop = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
                     $loopTemplate = file_get_contents($pathLoop);
                     foreach ($innerPlaceholders as $innerPlaceholder) {
-                        $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($entry[strtolower($innerPlaceholder)]), $loopTemplate);
+                        if ($type == 'object-loop') {
+                            $methodeNameForGet = 'get' . $innerPlaceholder;
+                            $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($entry->$methodeNameForGet()), $loopTemplate);
+                        } else {
+                            $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($entry[strtolower($innerPlaceholder)]), $loopTemplate);
+                        }
                     }
                     $contentTemplate .= $loopTemplate;
                 }

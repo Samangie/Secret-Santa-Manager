@@ -134,9 +134,9 @@ class Campaign extends Model
 
     public function getUsersByCampaign()
     {
-        $statement = $this->connection->prepare('SELECT user_campaign.user_id, user.username FROM `user_campaign` 
-                                                 LEFT JOIN user ON (user_campaign.user_id = user.id ) 
-                                                 WHERE campaign_id = :campaign_id');
+        $statement = $this->connection->prepare('SELECT `user_campaign`.`user_id`, `user`.`username` FROM `user_campaign` 
+                                                 LEFT JOIN user ON (`user_campaign`.`user_id` = `user`.`id` ) 
+                                                 WHERE `campaign_id` = :campaign_id');
 
         $statement->bindParam(':campaign_id',$this->id);
         $statement->execute();

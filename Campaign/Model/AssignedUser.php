@@ -17,7 +17,7 @@ class AssignedUser extends Model
     protected $santaId;
     protected $doneeId;
 
-    public function __construct($campaign_id = null, $santaId = null, $doneeId = null)
+    public function __construct($campaign_id = 0, $santaId = 0, $doneeId = 0)
     {
         parent::getConnection();
         $this->campaignId = $campaign_id;
