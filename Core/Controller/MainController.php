@@ -28,13 +28,11 @@ class MainController
         $methodName = 'index';
 
         $request = explode('/', $_SERVER['REQUEST_URI']);
-        if (!empty($request[1])) {
-            $controllerName = strtolower ($request[1]);
-        }
-        if (!empty($request[2])) {
+        if (isset($request[1]) && !empty($request[1])) { $controllerName = strtolower ($request[1]); };
+        if (isset($request[2]) && !empty($request[2])) {
             $methodName = explode("?", $request[2]);
             $methodName = strtolower ($methodName[0]);
-        }
+        };
 
         $controllerClass = ucfirst($controllerName) . 'Controller';
 

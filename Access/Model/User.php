@@ -20,8 +20,10 @@ class User extends Model
     protected $email;
     protected $role;
 
-    public function __construct($username, $password = '', $email = '', $role = 0)
+    public function __construct($id = null, $username, $password = null, $email = null, $role = null)
     {
+        parent::getConnection();
+        $this->id = $id;
         $this->username = $username;
         $this->password = sha1($password);
         $this->email = $email;
@@ -33,8 +35,6 @@ class User extends Model
         if (property_exists($this, $property)) {
             return $this->$property;
         }
-
-        return false;
     }
 
     public function __set($property, $value)
@@ -42,11 +42,18 @@ class User extends Model
         if (property_exists($this, $property)) {
             $this->$property = $value;
         }
+
+        return $this;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
     }
 
     public function insert()
     {
-        $statement = $this::getConnection()->prepare('INSERT INTO `' . $this->tableName . '` (`username`, `password`, `email`, `role`) VALUES (:username, :password, :email, :role)');
+        $statement = $this->connection->prepare('INSERT INTO `' . $this->tableName . '` (`username`, `password`, `email`, `role`) VALUES (:username, :password, :email, :role)');
 
         $statement->bindParam(':username',$this->username);
         $statement->bindParam(':password',$this->password);
@@ -61,14 +68,8 @@ class User extends Model
 
     public function login()
     {
-        if (empty($this->username)) {
-            $statement = $this::getConnection()->prepare('SELECT `username`, `role` FROM `' . $this->tableName . '` WHERE `email` = :email AND `password` = :password');
-            $statement->bindParam(':email',$this->email);
-        } else {
-            $statement = $this->connection->prepare('SELECT `username`, `role` FROM `' . $this->tableName . '` WHERE `username` = :username AND `password` = :password');
-            $statement->bindParam(':username',$this->username);
-        }
-
+        $statement = $this->connection->prepare('SELECT `username`, `role` FROM `' . $this->tableName . '` WHERE `username` = :username AND `password` = :password');
+        $statement->bindParam(':username',$this->username);
         $statement->bindParam(':password',$this->password);
 
         $statement->execute();

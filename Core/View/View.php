@@ -85,12 +85,17 @@ class View
 
             $contentTemplate = '';
 
-            if ($type == 'loop') {
+            if ($type == 'loop' || $type == 'object-loop') {
                 foreach ($placeholderContent as $entry) {
                     $pathLoop = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
                     $loopTemplate = file_get_contents($pathLoop);
                     foreach ($innerPlaceholders as $innerPlaceholder) {
-                        $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($entry[strtolower($innerPlaceholder)]), $loopTemplate);
+                        if ($type == 'object-loop') {
+                            $methodeNameForGet = 'get' . $innerPlaceholder;
+                            $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($entry->$methodeNameForGet()), $loopTemplate);
+                        } else {
+                            $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($entry[strtolower($innerPlaceholder)]), $loopTemplate);
+                        }
                     }
                     $contentTemplate .= $loopTemplate;
                 }
@@ -104,22 +109,17 @@ class View
                     $fileTemplate = $contentTemplate;
                 }
 
-            } else {
-                if (!empty($innerPlaceholders)) {
+            }
+            else {
+                if(!empty($innerPlaceholders)) {
                     $pathPlaceholder = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
                     $templatePlaceholder = file_get_contents($pathPlaceholder);
                     foreach ($innerPlaceholders as $innerPlaceholder) {
                         $templatePlaceholder = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($placeholderContent[strtolower($innerPlaceholder)]), $templatePlaceholder);
                     }
                     $contentTemplate .= $templatePlaceholder;
-                } else {
-                    if (empty($placeholderContent)) {
-                        $pathPlaceholder = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
-                        $templatePlaceholder = file_get_contents($pathPlaceholder);
-                        $contentTemplate = $templatePlaceholder;
-                    } else {
-                        $contentTemplate = $placeholderContent;
-                    }
+                }else {
+                    $contentTemplate = $placeholderContent;
                 }
                 $fileTemplate = str_replace('[[' . $mainPlaceholder . ']]', $contentTemplate, $fileTemplate);
             }

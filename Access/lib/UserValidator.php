@@ -19,7 +19,7 @@ class UserValidator extends Validator
         parent::__construct($model);
     }
 
-    public function isValid($reppasword = '')
+    public function isValid($reppasword = null)
     {
         $checkuniqueUsername = $this->uniqueUsername($this->model->username);
         $checkUsernameIsString = $this->valueIsString($this->model->username);

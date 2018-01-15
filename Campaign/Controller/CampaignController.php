@@ -8,7 +8,6 @@
 
 include_once 'Core/Controller/ComponentController.php';
 require_once 'Campaign/Model/Campaign.php';
-require_once 'Campaign/Model/CampaignUser.php';
 require_once 'Campaign/lib/CampaignValidator.php';
 
 class CampaignController extends ComponentController
@@ -26,13 +25,6 @@ class CampaignController extends ComponentController
             }
 
             $placeholders = array(
-                array(
-                    'name' => 'CAMPAIGNS_CREATE',
-                    'template' => 'campaigns_create_form',
-                    'type' => false,
-                    'innerPlaceholders' => '',
-                    'placeholderContent' => '',
-                ),
                 array(
                     'name' => 'CAMPAIGNS',
                     'template' => 'allCampaigns_content_loop',
@@ -103,20 +95,17 @@ class CampaignController extends ComponentController
             $campaign_id = $_GET['id'];
             $username = $_SESSION['username'];
 
-            $campaignUser = new CampaignUser($username,$campaign_id);
-
-            $validator = new CampaignValidator($campaignUser);
-            $validator->userIsAssigned();
             $campaign = new Campaign($campaign_id);
-            $validatorCampaign = new CampaignValidator($campaign);
-            $validatorCampaign->campaignIsAssigned();
-            if (empty($validator->getErrorMessages()) && empty($validatorCampaign->getErrorMessages())) {
-                $campaignUser->insert();
-                $_SESSION['userAdded'] = 'Sie haben sich für die Kampanie angemeldet';
+            $user = new User(0, $username);
+            $campaign->setUser($user);
+
+            $validator = new CampaignValidator($campaign);
+            $validator->userIsAssigned();
+            if (empty($validator->getErrorMessages())) {
+                $campaign->addUserToCampaign();
                 header('Location: /Campaign/');
             }
         }
-        header('Location: /Campaign/');
     }
 
     public function showParticipant()
@@ -125,16 +114,14 @@ class CampaignController extends ComponentController
 
             $campaign_id = $_GET['id'];
 
-            $campaignUser = new CampaignUser(null, $campaign_id);
-            $participantEntries = $campaignUser->readAllParticipant();
-
             $campaign = new Campaign($campaign_id);
+            $participantEntries = $campaign->getUsersByCampaignId();
 
             $validator = new CampaignValidator($campaign);
             $validator->campaignIsAssigned();
             $validator->hasEnoughUsers();
             if (empty($validator->getErrorMessages())) {
-                $assignLink = '<a href="/Campaign/assign?id=' . $campaign_id .'" class="btn btn-primary"> Zuweisen </a><br/><br/>';
+                $assignLink = '<a href="/Campaign/assign?id=' . $campaign_id .'" > Zuweisen </a>';
             } else {
                 $assignLink = $validator->getErrorMessages();
             }
@@ -149,7 +136,7 @@ class CampaignController extends ComponentController
                 array(
                     'name' => 'PARTICIPANTS',
                     'template' => 'allParticipants_content_loop',
-                    'type' => 'loop',
+                    'type' => 'object-loop',
                     'innerPlaceholders' =>
                         array(
                             'USERNAME'
@@ -174,8 +161,6 @@ class CampaignController extends ComponentController
                     ),
                 ),
             );
-
-
             $this->output('campaign', 'participants',$placeholders);
         }
     }
@@ -187,8 +172,7 @@ class CampaignController extends ComponentController
             $campaign = new Campaign($campaign_id);
 
             $validator = new CampaignValidator($campaign);
-            $validator->campaignIsAssigned();
-            if (empty($validator->getErrorMessages())) {
+            if ($validator->campaignIsAssigned()) {
                 $campaign->assign();
                 header('Location: /Campaign/');
             }

@@ -1,50 +1,25 @@
-<div class="container mt-3">
-    <div class="custom-row">
-        <h2 class="mb-3">Login</h2>
-        <form action="/Access/login" method="post">
-            <div class="form-group">
-                <input class="form-control" type="text" name="username" placeholder="Benutzername / Email" id="username-input">
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="Passwort" id="password-input">
-            </div>
-            <button class="btn btn-primary" type="submit" name="login">Login</button>
-        </form>
-        <hr/>
-    </div>
-</div>
+<form action="/Access/login" method="post">
 
-<div class="container mt-3">
-    <div class="custom-row">
-        <h2 class="mb-3">Registrieren</h2>
-        <form action="/Access/register" method="post">
-            <div class="form-group">
-                <input class="form-control" type="text" name="username" placeholder="Benutzername" >
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="email" name="email" placeholder="E-Mail" >
-            </div>
-            <fieldset class="form-group">
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="role" id="role0" value="0" checked>
-                        Teilnehmer
-                    </label>
-                </div>
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="role" id="role1" value="1">
-                        Organisator
-                    </label>
-                </div>
-            </fieldset>
-            <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="Passwort">
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="reppassword" placeholder="Passwort wiederholen">
-            </div>
-            <button class="btn btn-primary" type="submit" name="register">Registrieren</button>
-        </form>
-    </div>
-</div>
+    <input type="text" name="username" placeholder="Benutzername" />
+    <input type="password" name="password" placeholder="Passwort" />
+    <button type="submit" name="login">Login</button>
+</form>
+
+<?php if(!empty($_SESSION['userDoesntExist'])) { echo $_SESSION['userDoesntExist'];}; ?>
+<?php if(!empty($_SESSION['userExist'])) { echo $_SESSION['userExist'];}; ?>
+<?php if(!empty($_SESSION['valueIsNotAValidString'])) { echo $_SESSION['valueIsNotAValidString'];}; ?>
+<?php if(!empty($_SESSION['passwordIsNotValid'])) { echo $_SESSION['passwordIsNotValid'];}; ?>
+<?php if(!empty($_SESSION['differentPassword'])) { echo $_SESSION['differentPassword'];}; ?>
+<?php if(!empty($_SESSION['emailIsNotValid'])) { echo $_SESSION['emailIsNotValid'];}; ?>
+<?php if(!empty($_SESSION['emailExist'])) { echo $_SESSION['emailExist'];}; ?>
+
+
+<form action="/Access/register" method="post">
+
+    <input type="text" name="username" placeholder="Benutzername" />
+    <input type="text" name="email" placeholder="Email" />
+    <input type="radio" id="role2" name="role" value="0">Teilnehmer <input type="radio" id="role1" name="role" value="1">Organisator
+    <input type="password" name="password" placeholder="Passwort" />
+    <input type="password" name="reppassword" placeholder="Passwort wiederholen" />
+    <button type="submit" name="register">Registrieren</button>
+</form>

@@ -44,7 +44,7 @@ class CampaignValidator extends Validator
 
     public function userIsAssigned()
     {
-        if ($this->model->checkUserByCampId()) {
+        if (!empty($this->model->readUserByCampaignId())) {
             $this->errorMessages  .= 'Der Teilnehmer wurde bereits angemeldet oder die Teilnahme wurde geschlossen';
             return false;
         }
@@ -52,13 +52,11 @@ class CampaignValidator extends Validator
     }
 
     public function hasEnoughUsers() {
-        $campaignUser = new CampaignUser(null, $this->model->id);
-        $participantEntries = $campaignUser->readAllParticipant();
-
-        if (sizeof($participantEntries) > 2) {
+        $participantEntries = $this->model->getUsersIdsByCampaignId();
+        if (sizeof($participantEntries) > 1) {
             return true;
         }
-        $this->errorMessages .= 'Es haben sich noch nicht genug Teilnehmer angemeldet <br/>';
+        $this->errorMessages .= 'Es haben sich noch keine Teilnehmer angemeldet <br/>';
         return false;
 
     }

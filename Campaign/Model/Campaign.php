@@ -8,7 +8,6 @@
  */
 
 require_once "Core/Model/Model.php";
-require_once "Campaign/Model/AssignedUser.php";
 
 class Campaign extends Model
 {
@@ -18,9 +17,11 @@ class Campaign extends Model
     protected $title;
     protected $startdate;
     protected $isAssigned;
+    protected $users = array();
 
-    public function __construct($id = 0, $title = '', $startdate = null, $isAssigned = 0)
+    public function __construct($id = null, $title = null, $startdate = null, $isAssigned = null)
     {
+        parent::getConnection();
         $this->id = $id;
         $this->title = $title;
         $this->startdate = $startdate;
@@ -31,20 +32,16 @@ class Campaign extends Model
         if (property_exists($this, $property)) {
             return $this->$property;
         }
-
-        return false;
     }
 
-    public function __set($property, $value)
+    public function setUser($user)
     {
-        if (property_exists($this, $property)) {
-            $this->$property = $value;
-        }
+        array_push($this->users,$user);
     }
 
     public function insert()
     {
-        $statement = $this::getConnection()->prepare('INSERT INTO `' . $this->tableName . '` (`title`, `startdate`) VALUES (:title, :startdate)');
+        $statement = $this->connection->prepare('INSERT INTO `' . $this->tableName . '` (`title`, `startdate`) VALUES (:title, :startdate)');
 
         $statement->bindParam(':title',$this->title);
         $statement->bindParam(':startdate',$this->startdate);
@@ -63,11 +60,7 @@ class Campaign extends Model
        /* if ($this->startdate != $currentDate) {
             return false;
         }*/
-
-        $assignedUser = new AssignedUser($this->id);
-
-        $campaignUser = new CampaignUser(null, $this->id);
-        $allParticipants = $campaignUser->readAllParticipantIds();
+        $allParticipants = $this->getUsersIdsByCampaignId();
         $allSantas = $allParticipants;
         $allDonees = $allParticipants;
         $assignedUserList = array();
@@ -108,9 +101,9 @@ class Campaign extends Model
         } while (sizeof($allSantas));
 
         foreach ($assignedUserList as $pair) {
-            $assignedUser->santaId = $pair['santa']['user_id'];
-            $assignedUser->doneeId = $pair['donee']['user_id'];
-            $assignedUser->insert();
+            $santaId = $pair['santa']['user_id'];
+            $doneeId = $pair['donee']['user_id'];
+            $this->insertAssignedUserPair($santaId, $doneeId);
         }
 
         $this->isAssigned = 1;
@@ -120,7 +113,7 @@ class Campaign extends Model
 
     public function updateAttrAssigned()
     {
-        $statement = $this::getConnection()->prepare('UPDATE `' . $this->tableName . '` SET isAssigned = :isAssigned WHERE id = :id');
+        $statement = $this->connection->prepare('UPDATE `' . $this->tableName . '` SET isAssigned = :isAssigned WHERE id = :id');
 
         $statement->bindParam(':id',$this->id);
         $statement->bindParam(':isAssigned',$this->isAssigned);
@@ -130,4 +123,76 @@ class Campaign extends Model
         }
     }
 
+    public function getUsersIdsByCampaignId()
+    {
+        $statement = $this->connection->prepare('SELECT `user_id` FROM `user_campaign` WHERE `campaign_id` = :campaign_id' );
+
+        $statement->bindParam(':campaign_id',$this->id);
+        $statement->execute();
+        $results = $statement->fetchAll();
+
+        return $results;
+    }
+
+    public function getUsersByCampaignId()
+    {
+        $statement = $this->connection->prepare('SELECT `user_campaign`.`user_id`, `user`.`username` FROM `user_campaign` 
+                                                 LEFT JOIN user ON (`user_campaign`.`user_id` = `user`.`id` ) 
+                                                 WHERE `campaign_id` = :campaign_id');
+
+        $statement->bindParam(':campaign_id',$this->id);
+        $statement->execute();
+        $results = $statement->fetchAll();
+
+        foreach ($results as $result) {
+            array_push($this->users, new User($result['user_id'], $result['username']));
+        }
+        return $this->users;
+    }
+
+    public function addUserToCampaign()
+    {
+        foreach ($this->users as $user) {
+            $username = $user->getUsername();
+            $statement = $this->connection->prepare('INSERT INTO `user_campaign` (`user_id`, `campaign_id`) VALUES ((SELECT `id` FROM `user` WHERE `username` = :username), :campaign_id)');
+
+            $statement->bindParam(':username',$username);
+            $statement->bindParam(':campaign_id',$this->id);
+
+            if ($statement->execute()) {
+                return true;
+            }
+        }
+    }
+
+    public function readUserByCampaignId()
+    {
+        foreach ($this->users as $user) {
+            $username = $user->getUsername();
+            $statement = $this->connection->prepare('SELECT `user_campaign`.`user_id` FROM `user_campaign` 
+                                                 LEFT JOIN user ON (`user_campaign`.`user_id` = `user`.`id` ) 
+                                                 WHERE `campaign_id` = :campaign_id AND `user`.`username` = :username');
+
+            $statement->bindParam(':campaign_id', $this->id);
+            $statement->bindParam(':username', $username);
+
+            $statement->execute();
+
+            if ($statement->execute()) {
+                $result = $statement->fetchAll();
+                return $result;
+            }
+        }
+    }
+
+    public function insertAssignedUserPair($santaId, $doneeId)
+    {
+        $statement = $this->connection->prepare('INSERT INTO `assigned_user` (`campaign_id`, `santa_id`, `donee_id`) VALUES (:campaign_id, :santa_id, :donee_id)');
+
+        $statement->bindParam(':campaign_id',$this->id);
+        $statement->bindParam(':santa_id',$santaId);
+        $statement->bindParam(':donee_id',$doneeId);
+
+        $statement->execute();
+    }
 }
