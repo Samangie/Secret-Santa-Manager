@@ -8,7 +8,6 @@
 
 include_once 'Core/Controller/ComponentController.php';
 require_once 'Campaign/Model/Campaign.php';
-require_once 'Campaign/Model/CampaignUser.php';
 require_once 'Campaign/lib/CampaignValidator.php';
 
 class CampaignController extends ComponentController
@@ -96,12 +95,14 @@ class CampaignController extends ComponentController
             $campaign_id = $_GET['id'];
             $username = $_SESSION['username'];
 
-            $campaignUser = new CampaignUser($username,$campaign_id);
+            $campaign = new Campaign($campaign_id);
+            $user = new User(0, $username);
+            $campaign->setUser($user);
 
-            $validator = new CampaignValidator($campaignUser);
+            $validator = new CampaignValidator($campaign);
             $validator->userIsAssigned();
             if (empty($validator->getErrorMessages())) {
-                $campaignUser->insert();
+                $campaign->addUserToCampaign();
                 header('Location: /Campaign/');
             }
         }
@@ -113,11 +114,8 @@ class CampaignController extends ComponentController
 
             $campaign_id = $_GET['id'];
 
-            $campaignUser = new CampaignUser(null, $campaign_id);
-            //$participantEntries = $campaignUser->readAllParticipant();
-
             $campaign = new Campaign($campaign_id);
-            $participantEntries = $campaign->getUsersByCampaign();
+            $participantEntries = $campaign->getUsersByCampaignId();
 
             $validator = new CampaignValidator($campaign);
             $validator->campaignIsAssigned();
@@ -163,8 +161,6 @@ class CampaignController extends ComponentController
                     ),
                 ),
             );
-
-
             $this->output('campaign', 'participants',$placeholders);
         }
     }
