@@ -185,7 +185,6 @@ class CampaignController extends ComponentController
                 $campaign->assign();
                 header('Location: /Campaign/');
             }
-            die();
             header('Location: /Campaign/showParticipant?id=' . $_GET['id']);
         }
         header('Location: /Campaign/');

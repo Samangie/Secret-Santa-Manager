@@ -25,7 +25,7 @@ class User extends Model
         parent::getConnection();
         $this->id = $id;
         $this->username = $username;
-        $this->password = sha1($password);
+        $this->password = $password;
         $this->email = $email;
         $this->role = $role;
     }
@@ -42,6 +42,16 @@ class User extends Model
         return $this->username;
     }
 
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
     public function getRole()
     {
         return $this->role;
@@ -52,7 +62,7 @@ class User extends Model
         $statement = $this::getConnection()->prepare('INSERT INTO `' . $this->tableName . '` (`username`, `password`, `email`, `role`) VALUES (:username, :password, :email, :role)');
 
         $statement->bindParam(':username',$this->username);
-        $statement->bindParam(':password',$this->password);
+        $statement->bindParam(':password',sha1($this->password));
         $statement->bindParam(':email',$this->email);
         $statement->bindParam(':role',$this->role);
 

@@ -21,15 +21,13 @@ class UserValidator extends Validator
 
     public function isValid($reppasword = '')
     {
-        $checkuniqueUsername = $this->uniqueUsername($this->model->username);
-        $checkUsernameIsString = $this->valueIsString($this->model->username);
-        $checkPasswordIsValid = true; //$this->passwordIsValid($this->model->password);
-        $checkComparePasswords = $this->comparePasswords($this->model->password, $reppasword);
-        $checkEmailIsValid = $this->emailIsValid($this->model->email);
-        $checkEmailIsUnique = $this->uniqueEmail($this->model->email);
+        $checkuniqueUsername = $this->uniqueUsername($this->model->getUsername());
+        $checkPasswordIsValid = $this->passwordIsValid($this->model->getPassword());
+        $checkComparePasswords = $this->comparePasswords($this->model->getPassword(), $reppasword);
+        $checkEmailIsValid = $this->emailIsValid($this->model->getEmail());
+        $checkEmailIsUnique = $this->uniqueEmail($this->model->getEmail());
 
         if ($checkuniqueUsername
-            && $checkUsernameIsString
             && $checkPasswordIsValid
             && $checkComparePasswords
             && $checkEmailIsValid
@@ -39,58 +37,70 @@ class UserValidator extends Validator
         }
     }
 
-    public function uniqueUsername($username)
+    public function uniqueUsername($username, $setMessage = true)
     {
         if ($this->model->readByAttribut('username', $username)) {
             return true;
         }
-
-        $this->errorMessages .= 'Der Benutzername exisitert bereits!';
+        if ($setMessage) {
+            $errorMessage = 'Der Benutzername exisitert bereits!';
+            $this->setErrorMessages('unique_username', $errorMessage);
+        }
         return false;
     }
 
-    public function passwordIsValid($password)
+    public function passwordIsValid($password, $setMessage = true)
     {
-        //"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}"
-        if (preg_match('', $password)){
+        if (preg_match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@#!?%*&])[a-zA-Z-0-9$@#!?%*&]{8,25}^', $password)){
             return true;
         }
-
-        $this->errorMessages .= 'Das Passwort muss zwischen 8 - 25 zeichen lang sein und ein Sonderzeichen sowie eine Zahl enthalten!';
-
+        if ($setMessage) {
+            $errorMessage = 'Das Passwort muss zwischen 8 - 25 zeichen lang sein und ein Sonderzeichen sowie eine Zahl enthalten!';
+            $this->setErrorMessages('not_valid_password', $errorMessage);
+        }
     }
 
-    public function comparePasswords($password, $reppassword)
+    public function comparePasswords($password, $reppassword, $setMessage = true)
     {
         if ($password == $reppassword) {
             return true;
         }
-
-        $this->errorMessages .= 'Die Passwörter stimmen nicht überein.';
+        if ($setMessage) {
+            $errorMessage = 'Die Passwörter stimmen nicht überein.';
+            $this->setErrorMessages('different_passwords', $errorMessage);
+        }
         return false;
     }
 
-    public function emailIsValid($email)
+    public function emailIsValid($email, $setMessage = true)
     {
-        $regex = '/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD';
-
-        if (preg_match($regex, $email)) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return true;
         }
-
-        $this->errorMessages .= 'Muss eine E-Mail Adresse sein!';
+        if ($setMessage) {
+            $errorMessage = 'Muss eine E-Mail Adresse sein!';
+            $this->setErrorMessages('not_valid_email', $errorMessage);
+        }
+        return false;
 
     }
 
-    public function uniqueEmail($email)
+    public function uniqueEmail($email, $setMessage = true)
     {
         if ($this->model->readByAttribut('email', $email)) {
             return true;
         }
-
-        $this->errorMessages .= 'Die Email wird bereits verwendet!';
+        if ($setMessage) {
+            $errorMessage = 'Die Email wird bereits verwendet!';
+            $this->setErrorMessages('unique_email', $errorMessage);
+        }
         return false;
 
+    }
+
+    public function userDoesntExist() {
+        $errorMessage = 'Der Benutzername und das Passwort stimmt nicht überein!';
+        $this->setErrorMessages('user_doesnt_exist', $errorMessage);
     }
 
 }

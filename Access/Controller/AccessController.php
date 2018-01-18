@@ -17,8 +17,39 @@ class AccessController extends ComponentController
         if (!empty($_SESSION['loggedin'])) {
             header('Location: /');
         };
+        if (!empty($_SESSION['errorMessages'])) {
+            $errorMessages = $_SESSION['errorMessages'];
+        } else {
+            $errorMessages = array();
+        }
+        $placeholders = array(
+            array(
+                'name' => 'ERROR_LOGIN',
+                'template' => 'errorMessagesLogin_content',
+                'type' => false,
+                'innerPlaceholders' =>
+                    array(
+                        'USER_DOESNT_EXIST'
+                    ),
+                'placeholderContent' => $errorMessages,
+            ),
+            array(
+                'name' => 'ERROR_REGISTRATION',
+                'template' => 'errorMessagesRegistration_content',
+                'type' => false,
+                'innerPlaceholders' =>
+                    array(
+                        'UNIQUE_USERNAME',
+                        'NOT_VALID_PASSWORD',
+                        'DIFFERENT_PASSWORDS',
+                        'NOT_VALID_EMAIL',
+                        'UNIQUE_EMAIL',
+                    ),
+                'placeholderContent' => $errorMessages,
+            ),
+        );
+        $this->output('access','index', $placeholders);
 
-        $this->output('access','index');
     }
 
     public function login()
@@ -28,8 +59,10 @@ class AccessController extends ComponentController
             $password = $_POST['password'];
         }
 
+        $_SESSION['errorMessages'] = '';
+
         $validator = new UserValidator(new User($username, $password));
-        if ($validator->emailIsValid($username)) {
+        if ($validator->emailIsValid($username, false)) {
             $user = new User(0, null, $password, $username);
         } else {
             $user = new User(0, $username, $password);
@@ -42,7 +75,7 @@ class AccessController extends ComponentController
 
             header('Location: /Campaign/');
         } else {
-            $_SESSION['userDoesntExist'] = 'Der Benutzername und das Passwort stimmt nicht überein';
+           $validator->userDoesntExist();
         }
 
         header("Location: /Access/");
@@ -57,11 +90,13 @@ class AccessController extends ComponentController
             $email = $_POST['email'];
             $role = $_POST['role'];
 
+            $_SESSION['errorMessages'] = '';
+
             $user = new User(null, $username, $password, $email, $role);
 
             $validator = new UserValidator($user);
-            $validator->isValid(sha1($reppassword));
-            if (empty($validator->getErrorMessages())) {
+            $validator->isValid($reppassword);
+            if (empty($_SESSION['errorMessages'])) {
                 if ($user->insert()) {
                     $_SESSION['username'] = $user->getUsername();
                     $_SESSION['role'] = $user->getRole();
@@ -69,7 +104,7 @@ class AccessController extends ComponentController
                     header('Location: /Campaign/');
                 }
             }
-            echo $validator->getErrorMessages();
+            header('Location: /Access/');
         } else {
             header('Location: /Access/');
         }

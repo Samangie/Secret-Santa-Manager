@@ -16,3 +16,6 @@ form {
     width: 100%;
     margin: 0 0.25rem;
 }
+.alert {
+    display: none;
+}
