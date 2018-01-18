@@ -108,9 +108,10 @@ class CampaignController extends ComponentController
 
             $validator = new CampaignValidator($campaign);
             $validator->userIsAssigned();
-            if (empty($validator->getErrorMessages())) {
+            if (empty($_SESSION['errorMessages'])) {
                 $campaign->addUserToCampaign();
-                $_SESSION['userAdded'] = 'Sie haben sich für die Kampanie angemeldet';
+                $validator->userAdded();
+                setcookie('user_is_assigned', '1');
                 header('Location: /Campaign/');
             }
         }
@@ -126,14 +127,12 @@ class CampaignController extends ComponentController
             $campaign = new Campaign($campaign_id);
             $participantEntries = $campaign->getUsersByCampaignId();
 
+            $_SESSION['errorMessages'] = array();
+
             $validator = new CampaignValidator($campaign);
-            $validator->campaignIsAssigned();
-            $validator->hasEnoughUsers();
-            if (empty($validator->getErrorMessages())) {
-                $assignLink = '<a href="/Campaign/assign?id=' . $campaign_id .'"class="btn btn-primary"> Zuweisen </a><br/><br/>';
-            } else {
-                $assignLink = $validator->getErrorMessages();
-            }
+            $validator->assignmentIsAvailable();
+
+            $errorMessages = $_SESSION['errorMessages'];
 
             if (empty($_SESSION['role'])) {
                 $hasNoRights = true;
@@ -153,11 +152,16 @@ class CampaignController extends ComponentController
                     'placeholderContent' => $participantEntries
                 ),
                 array(
-                    'name' => 'ASSIGNED',
-                    'template' => '',
+                    'name' => 'ERROR_LOGIN',
+                    'template' => 'errorMessagesAssignment_content',
                     'type' => false,
-                    'innerPlaceholders' => '',
-                    'placeholderContent' => $assignLink
+                    'innerPlaceholders' =>
+                        array(
+                            'HAS_ENOUGH_USERS',
+                            'ASSIGNMENT_IS_AVAILABLE',
+                            'CAMPAIGN_IS_ASSIGNED'
+                        ),
+                    'placeholderContent' => $errorMessages,
                 ),
                 array(
                     'name' => 'RIGHTS',

@@ -16,6 +16,11 @@ form {
     width: 100%;
     margin: 0 0.25rem;
 }
-.alert {
+.errorMessage, .signin-btn a, .isAssigned {
     display: none;
+}
+.popup {
+    display: none;
+    position: absolute;
+    right: 0;
 }

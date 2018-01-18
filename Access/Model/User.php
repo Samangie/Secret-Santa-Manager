@@ -81,7 +81,7 @@ class User extends Model
             $statement =$this::getConnection()->prepare('SELECT `username`, `role` FROM `' . $this->tableName . '` WHERE `username` = :username AND `password` = :password');
             $statement->bindParam(':username',$this->username);
         }
-        $statement->bindParam(':password',$this->password);
+        $statement->bindParam(':password',sha1($this->password));
 
         $statement->execute();
 

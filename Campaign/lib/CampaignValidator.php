@@ -32,33 +32,59 @@ class CampaignValidator extends Validator
         return $this;
     }
 
-    public function campaignIsAssigned()
+    public function campaignIsAssigned($setMessage = true)
     {
         $campaign = $this->model->readById($this->model->id);
         if (empty($campaign['isassigned'])) {
             return true;
         }
-        $this->errorMessages .= 'Die Teilnehmer wurden bereits zugewiesen. <br/>';
+        if ($setMessage) {
+            $errorMessage= 'Die Teilnehmer wurden bereits zugewiesen.';
+            $this->setErrorMessages('campaign_is_assigned', $errorMessage);
+        }
         return false;
     }
 
-    public function userIsAssigned()
+    public function userIsAssigned($setMessage = true)
     {
-        if (!empty($this->model->readUserByCampaignId())) {
-            $this->errorMessages  .= 'Der Teilnehmer wurde bereits angemeldet oder die Teilnahme wurde geschlossen';
-            return false;
+        if (empty($this->model->readUserByCampaignId())) {
+            return true;
         }
-        return true;
+        if ($setMessage) {
+            $errorMessage= 'Der Teilnehmer wurde bereits angemeldet oder die Teilnahme wurde geschlossen';
+            $this->setErrorMessages('user_is_assigned', $errorMessage);
+        }
+        setcookie('user_is_already_assigned', '1');
+        return false;
     }
 
-    public function hasEnoughUsers() {
+    public function hasEnoughUsers($setMessage = true) {
         $participantEntries = $this->model->getUsersIdsByCampaignId();
         if (sizeof($participantEntries) > 2) {
             return true;
         }
-        $this->errorMessages .= 'Es haben sich noch nicht genug Teilnehmer angemeldet <br/>';
+        if ($setMessage) {
+            $errorMessage= 'Es haben sich noch nicht genug Teilnehmer angemeldet';
+            $this->setErrorMessages('has_enough_users', $errorMessage);
+        }
         return false;
-
     }
 
+    public function userAdded($setMessage = true) {
+        if ($setMessage) {
+            $errorMessage= 'Sie haben sich für die Kampanie angemeldet';
+            $this->setErrorMessages('user_added', $errorMessage);
+        }
+    }
+
+    public function assignmentIsAvailable($setMessage = true) {
+        if ($this->campaignIsAssigned() && $this->hasEnoughUsers()) {
+            if ($setMessage) {
+                $errorMessage= '<a href="/Campaign/assign?id=' . $this->model->id .'"class="btn btn-primary"> Zuweisen </a><br/><br/>';
+                $this->setErrorMessages('assignment_is_available', $errorMessage);
+            }
+            return true;
+        }
+        return false;
+    }
 }

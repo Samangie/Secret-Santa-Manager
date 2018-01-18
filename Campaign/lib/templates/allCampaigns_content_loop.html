@@ -1,14 +1,14 @@
-<div class="col-lg-4 col-md-6 col-sm-12 mb-2 pl-1 pr-1">
+<div class="col-lg-4 col-md-6 col-sm-12 mb-2 pl-1 pr-1 campaign">
     <div class="card col-12">
         <div class="card-block">
+            <div class="isAssigned">[[ISASSIGNED]]</div>
             <RIGHTS>
                 <a href="/Campaign/delete?id=[[ID]]"><i class="fa fa-trash" aria-hidden="true"></i></a>
             </RIGHTS>
             <h4 class="card-title">[[TITLE]]</h4>
-            Startdatum: [[STARTDATE]]<br/>
-            Zugewiesen: [[ISASSIGNED]]<br/><br/>
+            <div class="row pb-4 px-3">Startdatum: [[STARTDATE]]</div>
             <div class="row">
-                <div class="col-md-6 col-sm-12">
+                <div class="col-md-6 col-sm-12 signin-btn">
                     <a href="/Campaign/addParticipant?id=[[ID]]" class="btn btn-primary">Anmelden</a>
                 </div>
                 <div class="col-md-6 col-sm-12 px-0 py-2">
