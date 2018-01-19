@@ -61,9 +61,9 @@ class AccessController extends ComponentController
 
         $_SESSION['errorMessages'] = '';
 
-        $validator = new UserValidator(new User($username, $password));
+        $validator = new UserValidator(new User(0,$username, $password));
         if ($validator->emailIsValid($username, false)) {
-            $user = new User(0, null, $password, $username);
+            $user = new User(0, '', $password, $username);
         } else {
             $user = new User(0, $username, $password);
         }
@@ -92,7 +92,7 @@ class AccessController extends ComponentController
 
             $_SESSION['errorMessages'] = '';
 
-            $user = new User(null, $username, $password, $email, $role);
+            $user = new User(0, $username, $password, $email, $role);
 
             $validator = new UserValidator($user);
             $validator->isValid($reppassword);
@@ -113,7 +113,7 @@ class AccessController extends ComponentController
     public function logout()
     {
         if (isset($_SESSION['username'])) {
-            $user = new User(null, $_SESSION['username']);
+            $user = new User(0, $_SESSION['username']);
             $user->logout();
         }
         header('Location: /');

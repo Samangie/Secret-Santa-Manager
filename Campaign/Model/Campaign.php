@@ -34,7 +34,7 @@ class Campaign extends Model
         return false;
     }
 
-    public function setUser($user)
+    public function setUser(User $user)
     {
         array_push($this->users,$user);
     }

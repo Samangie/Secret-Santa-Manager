@@ -20,7 +20,7 @@ class User extends Model
     protected $email;
     protected $role;
 
-    public function __construct($id = 0, $username, $password = '', $email = '', $role = 0)
+    public function __construct(int $id = 0, string $username, string $password = '', string $email = '', int $role = 0)
     {
         parent::getConnection();
         $this->id = $id;

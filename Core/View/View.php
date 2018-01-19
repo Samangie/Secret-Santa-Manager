@@ -16,7 +16,7 @@ class View
     protected $footerPlaceholders;
     protected $config;
 
-    public function __construct($controllerName,$methodName, $contentPlaceholders, $headerPlaceholders, $footerPlaceholders)
+    public function __construct(string $controllerName,string $methodName, array $contentPlaceholders, array $headerPlaceholders, array $footerPlaceholders)
     {
         $this->controllerName = $controllerName;
         $this->methodName = $methodName;
@@ -30,7 +30,7 @@ class View
 
     protected function display()
     {
-        require_once 'themes/' . $this->config['themeName'] . '/footer.php';
+        require_once 'themes/' . $this->config['themeName'] . '/footer.html';
 
         $this->loadHeader();
         $this->loadContent();
@@ -50,7 +50,7 @@ class View
 
     protected function loadHeader()
     {
-        $path = 'themes/' . $this->config['themeName'] . '/header.php';
+        $path = 'themes/' . $this->config['themeName'] . '/header.html';
 
         $headerTemplate = file_get_contents($path);
         if (!empty($this->headerPlaceholders)) {
@@ -62,7 +62,7 @@ class View
 
     protected function loadFooter()
     {
-        $path = 'themes/' . $this->config['themeName'] . '/footer.php';
+        $path = 'themes/' . $this->config['themeName'] . '/footer.html';
 
         $footerTemplate = file_get_contents($path);
         if (!empty($this->footerPlaceholders)) {
@@ -71,7 +71,7 @@ class View
         print $footerTemplate;
     }
 
-    protected function fillPlaceholdersWithContent($fileTemplate, $placeholders, $module = null)
+    protected function fillPlaceholdersWithContent(string $fileTemplate, array $placeholders, string $module = '')
     {
         if (empty($module)) {
             $module = $this->controllerName;

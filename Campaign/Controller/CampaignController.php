@@ -17,13 +17,13 @@ class CampaignController extends ComponentController
         if (isset($_SESSION['loggedin'])) {
             $campaign = new Campaign();
             $campaignEntries = $campaign->readAllCampaigns();
-            
+
             if (empty($_SESSION['role'])) {
                 $hasNoRights = 1;
             } else {
                 $hasNoRights = 0;
             }
-            $user = new User(null, $_SESSION['username']);
+            $user = new User(0, $_SESSION['username']);
 
             $campaignsUserAssigned = $user->getCampaignIdsByUsername();
 

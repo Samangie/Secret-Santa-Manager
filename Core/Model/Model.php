@@ -34,7 +34,7 @@ abstract class Model
         return $result;
     }
 
-    public function readById($id)
+    public function readById(int $id)
     {
         $statement = $this::getConnection()->prepare('SELECT * FROM `' . $this->tableName . '` WHERE id = :id');
         $statement->bindParam(':id',$id);
@@ -57,7 +57,7 @@ abstract class Model
         }
     }
 
-    public function deleteById($id)
+    public function deleteById(int $id)
     {
         $statement = $this::getConnection()->prepare('DELETE FROM `' . $this->tableName . '` WHERE id = :id');
 

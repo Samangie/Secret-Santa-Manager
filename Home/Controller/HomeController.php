@@ -11,7 +11,6 @@ class HomeController extends ComponentController
 {
     public function index()
     {
-        //$this->output('home', 'index');
         header('Location: /Campaign/');
     }
 }

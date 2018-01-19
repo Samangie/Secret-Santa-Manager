@@ -11,7 +11,7 @@ require_once 'Core/lib/Validator.php';
 
 class CampaignValidator extends Validator
 {
-    public function __construct($model)
+    public function __construct(Campaign $model)
     {
         parent::__construct($model);
     }
@@ -21,6 +21,7 @@ class CampaignValidator extends Validator
         if (property_exists($this, $property)) {
             return $this->$property;
         }
+        return false;
     }
 
     public function __set($property, $value)
@@ -28,11 +29,9 @@ class CampaignValidator extends Validator
         if (property_exists($this, $property)) {
             $this->$property = $value;
         }
-
-        return $this;
     }
 
-    public function campaignIsAssigned($setMessage = true)
+    public function campaignIsAssigned(bool $setMessage = true)
     {
         $campaign = $this->model->readById($this->model->id);
         if (empty($campaign['isassigned'])) {
@@ -45,7 +44,7 @@ class CampaignValidator extends Validator
         return false;
     }
 
-    public function userIsAssigned($setMessage = true)
+    public function userIsAssigned(bool $setMessage = true)
     {
         if (empty($this->model->readUserByCampaignId())) {
             return true;
@@ -58,7 +57,8 @@ class CampaignValidator extends Validator
         return false;
     }
 
-    public function hasEnoughUsers($setMessage = true) {
+    public function hasEnoughUsers(bool $setMessage = true)
+    {
         $participantEntries = $this->model->getUsersIdsByCampaignId();
         if (sizeof($participantEntries) > 2) {
             return true;
@@ -70,14 +70,16 @@ class CampaignValidator extends Validator
         return false;
     }
 
-    public function userAdded($setMessage = true) {
+    public function userAdded(bool $setMessage = true)
+    {
         if ($setMessage) {
             $errorMessage= 'Sie haben sich für die Kampanie angemeldet';
             $this->setErrorMessages('user_added', $errorMessage);
         }
     }
 
-    public function assignmentIsAvailable($setMessage = true) {
+    public function assignmentIsAvailable(bool $setMessage = true)
+    {
         if ($this->campaignIsAssigned() && $this->hasEnoughUsers()) {
             if ($setMessage) {
                 $errorMessage= '<a href="/Campaign/assign?id=' . $this->model->id .'"class="btn btn-primary"> Zuweisen </a><br/><br/>';

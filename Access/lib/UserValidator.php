@@ -14,12 +14,12 @@ class UserValidator extends Validator
 {
     protected $model;
 
-    public function __construct($model)
+    public function __construct(User $model)
     {
         parent::__construct($model);
     }
 
-    public function isValid($reppasword = '')
+    public function isValid(string $reppasword = '')
     {
         $checkuniqueUsername = $this->uniqueUsername($this->model->getUsername());
         $checkPasswordIsValid = $this->passwordIsValid($this->model->getPassword());
@@ -37,7 +37,7 @@ class UserValidator extends Validator
         }
     }
 
-    public function uniqueUsername($username, $setMessage = true)
+    public function uniqueUsername(string $username, bool $setMessage = true)
     {
         if ($this->model->readByAttribut('username', $username)) {
             return true;
@@ -49,7 +49,7 @@ class UserValidator extends Validator
         return false;
     }
 
-    public function passwordIsValid($password, $setMessage = true)
+    public function passwordIsValid(string $password, bool $setMessage = true)
     {
         if (preg_match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@#!?%*&])[a-zA-Z-0-9$@#!?%*&]{8,25}^', $password)){
             return true;
@@ -60,7 +60,7 @@ class UserValidator extends Validator
         }
     }
 
-    public function comparePasswords($password, $reppassword, $setMessage = true)
+    public function comparePasswords(string $password, string $reppassword, bool $setMessage = true)
     {
         if ($password == $reppassword) {
             return true;
@@ -72,7 +72,7 @@ class UserValidator extends Validator
         return false;
     }
 
-    public function emailIsValid($email, $setMessage = true)
+    public function emailIsValid(string $email, bool $setMessage = true)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return true;
@@ -85,7 +85,7 @@ class UserValidator extends Validator
 
     }
 
-    public function uniqueEmail($email, $setMessage = true)
+    public function uniqueEmail(string $email, bool $setMessage = true)
     {
         if ($this->model->readByAttribut('email', $email)) {
             return true;
@@ -98,7 +98,8 @@ class UserValidator extends Validator
 
     }
 
-    public function userDoesntExist() {
+    public function userDoesntExist()
+    {
         $errorMessage = 'Der Benutzername und das Passwort stimmt nicht überein!';
         $this->setErrorMessages('user_doesnt_exist', $errorMessage);
     }

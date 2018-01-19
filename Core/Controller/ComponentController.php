@@ -11,12 +11,12 @@ abstract class ComponentController
 {
     abstract protected function index();
 
-    protected function output($controllerName,$methodName, $placeholders = null)
+    protected function output(string $controllerName, string $methodName, array $placeholders = array())
     {
-        if(empty($_SESSION['loggedin'])) {
+        if (empty($_SESSION['loggedin'])) {
             $linkHref = '/Access/';
             $linkText = 'Login/ Registrieren';
-        }else {
+        } else {
             $linkHref = '/Access/logout';
             $linkText = 'Logout';
         }
@@ -36,7 +36,7 @@ abstract class ComponentController
             ),
         );
 
-        new View($controllerName,$methodName, $placeholders, $headerPlaceholders, null);
+        new View($controllerName,$methodName, $placeholders, $headerPlaceholders, array());
     }
 
 }
