@@ -8,6 +8,7 @@
  */
 
 require_once "Core/Model/Model.php";
+require_once "Campaign/lib/CampaignMail.php";
 
 class Campaign extends Model
 {
@@ -67,14 +68,14 @@ class Campaign extends Model
 
     public function assign()
     {
-        $campaign = $this->readById('id', $this->id);
+        $campaign = $this->readById('id, startdate', $this->id);
         $this->startdate = $campaign['startdate'];
         $currentDate = strtotime(date("Y-m-d"));
 
        /* if ($this->startdate != $currentDate) {
             return false;
         }*/
-        $allParticipants = $this->getUsersIdsByCampaignId();
+        $allParticipants = $this->getUsersByCampaignId();
         $allSantas = $allParticipants;
         $allDonees = $allParticipants;
         $assignedUserList = array();
@@ -114,15 +115,21 @@ class Campaign extends Model
             }
         } while (sizeof($allSantas));
 
+        $mail = new CampaignMail();
+
         foreach ($assignedUserList as $pair) {
-            $santaId = $pair['santa']['user_id'];
-            $doneeId = $pair['donee']['user_id'];
-            $this->insertAssignedUserPair($santaId, $doneeId);
+
+            $santaId = $pair['santa']->getId();
+            $doneeId = $pair['donee']->getId();
+            $santaEmail = $pair['santa']->getEmail();
+            $santaName = $pair['santa']->getUsername();
+            $doneeName = $pair['donee']->getUsername();
+            $mail->sendAssignmentMail($santaEmail, $santaName, $doneeName);
+            //$this->insertAssignedUserPair($santaId, $doneeId);
         }
 
-        $this->isAssigned = 1;
-        $this->updateAttrAssigned();
-
+        //$this->isAssigned = 1;
+        //$this->updateAttrAssigned();
     }
 
     public function updateAttrAssigned()
@@ -150,8 +157,8 @@ class Campaign extends Model
 
     public function getUsersByCampaignId()
     {
-        $statement = $this::getConnection()->prepare('SELECT `user_campaign`.`user_id`, `user`.`username` FROM `user_campaign` 
-                                                 LEFT JOIN user ON (`user_campaign`.`user_id` = `user`.`id` ) 
+        $statement = $this::getConnection()->prepare('SELECT `user_campaign`.`user_id`, `user`.`username`, `user`.`email` FROM `user_campaign` 
+                                                 LEFT JOIN `user` ON (`user_campaign`.`user_id` = `user`.`id` ) 
                                                  WHERE `campaign_id` = :campaign_id');
 
         $statement->bindParam(':campaign_id',$this->id);
@@ -159,7 +166,7 @@ class Campaign extends Model
         $results = $statement->fetchAll();
 
         foreach ($results as $result) {
-            array_push($this->users, new User($result['user_id'], $result['username']));
+            array_push($this->users, new User($result['user_id'], $result['username'], '' ,$result['email']));
         }
         return $this->users;
     }

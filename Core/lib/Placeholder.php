@@ -122,12 +122,12 @@ class Placeholder
 
     protected function fillWithoutInnerPlaceholders()
     {
-        if (empty($this->placeholderContent)) {
+        if (!empty($this->templatePath)) {
             $pathPlaceholder = ucfirst($this->modul) . '/lib/templates/' . $this->templatePath . '.html';
             $templatePlaceholder = file_get_contents($pathPlaceholder);
             $this->contentTemplate = $templatePlaceholder;
         } else {
-            $this->contentTemplate = $this->placeholderContent;
+            $this->contentTemplate = $this->placeholderContent[strtolower($this->name)];
         }
     }
 }
