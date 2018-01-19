@@ -24,3 +24,6 @@ form {
     position: absolute;
     right: 0;
 }
+.campaign_id {
+    display: none;
+}

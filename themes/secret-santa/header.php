@@ -21,7 +21,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/Campaign/">Kampanie</a>
+                    <a class="nav-link" href="/Campaign/">Kampagne</a>
                 </li>
                 <li class="nav-item">
                     [[LOGIN]]

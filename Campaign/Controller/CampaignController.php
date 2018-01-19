@@ -16,13 +16,16 @@ class CampaignController extends ComponentController
     {
         if (isset($_SESSION['loggedin'])) {
             $campaign = new Campaign();
-            $campaignEntries = $campaign->readAll();
-
+            $campaignEntries = $campaign->readAllCampaigns();
+            
             if (empty($_SESSION['role'])) {
-                $hasNoRights = true;
+                $hasNoRights = 1;
             } else {
-                $hasNoRights = false;
+                $hasNoRights = 0;
             }
+            $user = new User(null, $_SESSION['username']);
+
+            $campaignsUserAssigned = $user->getCampaignIdsByUsername();
 
             $placeholders = array(
                 array(
@@ -55,6 +58,15 @@ class CampaignController extends ComponentController
                         'replace' => ''
                     ),
                 ),
+                array(
+                    'name' => 'CAMPAIGNS_USER_ASSIGNED',
+                    'template' => 'user_campaigns_content',
+                    'type' => 'loop',
+                    'innerPlaceholders' => array(
+                        'CAMPAIGN_ID'
+                    ),
+                    'placeholderContent' => $campaignsUserAssigned,
+                ),
             );
 
             $this->output('campaign', 'index', $placeholders);
@@ -70,7 +82,7 @@ class CampaignController extends ComponentController
             $title = $_POST['title'];
             $startdate = $_POST['startdate'];
 
-            $campaign = new Campaign(null, $title, $startdate);
+            $campaign = new Campaign(0, $title, $startdate);
 
             if ($campaign->insert()) {
                 header('Location: /Campaign/');
@@ -105,6 +117,7 @@ class CampaignController extends ComponentController
             $campaign = new Campaign($campaign_id);
             $user = new User(0, $username);
             $campaign->setUser($user);
+            $_SESSION['errorMessages'] = array();
 
             $validator = new CampaignValidator($campaign);
             $validator->userIsAssigned();

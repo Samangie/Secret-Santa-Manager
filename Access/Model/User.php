@@ -97,4 +97,15 @@ class User extends Model
     {
         session_destroy();
     }
+
+    public function getCampaignIdsByUsername()
+    {
+        $statement = $this::getConnection()->prepare('SELECT campaign_id FROM user_campaign WHERE user_id =  (SELECT id FROM user WHERE username = :username);' );
+
+        $statement->bindParam(':username',$this->username);
+        $statement->execute();
+        $results = $statement->fetchAll();
+
+        return $results;
+    }
 }

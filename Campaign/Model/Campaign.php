@@ -19,7 +19,7 @@ class Campaign extends Model
     protected $isAssigned;
     protected $users = array();
 
-    public function __construct($id = 0, $title = '', $startdate = null, $isAssigned = 0)
+    public function __construct(int $id = 0, string $title = '', string $startdate = null, int $isAssigned = 0)
     {
         $this->id = $id;
         $this->title = $title;
@@ -41,14 +41,28 @@ class Campaign extends Model
 
     public function insert()
     {
+        $databaseDate = date("Y-m-d", strtotime($this->startdate));
         $statement = $this::getConnection()->prepare('INSERT INTO `' . $this->tableName . '` (`title`, `startdate`) VALUES (:title, :startdate)');
 
         $statement->bindParam(':title',$this->title);
-        $statement->bindParam(':startdate',$this->startdate);
+        $statement->bindParam(':startdate',$databaseDate);
 
         if ($statement->execute()) {
             return true;
         }
+    }
+
+    public function readAllCampaigns()
+    {
+        $statement = $this::getConnection()->prepare('SELECT `id`, `title`, `startdate`, `isassigned` FROM ' . $this->tableName);
+
+        $statement->execute();
+
+        $results = $statement->fetchAll();
+        foreach ($results as $key => $field) {
+            $results[$key]['startdate'] = date("d.m.Y", strtotime($results[$key]['startdate']));
+        }
+        return $results;
     }
 
     public function assign()

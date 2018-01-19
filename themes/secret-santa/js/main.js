@@ -14,12 +14,22 @@ jQuery( document ).ready(function() {
     });
     jQuery('.signin-btn a').show();
 
-    //document.cookie = 'user_is_assigned=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    /*if (document.cookie.indexOf("user_is_assigned=") >= 0) {
-        jQuery('.popup.userAssigned').show();
+    jQuery('.campaign_id').each(function () {
+        var campaignID = jQuery(this).text();
+        jQuery('.campaign-' + campaignID).find('.signin-btn a').hide();
+    });
 
+    if (document.cookie.indexOf("user_is_assigned=") >= 0) {
+        jQuery('.popup.userAssigned').show('slide', { direction: 'right' }, 500);
+        document.cookie = 'user_is_assigned=; Path=/Campaign; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         setTimeout(function() {
-            jQuery('.popup.userAssigned').hide();
+            jQuery('.popup.userAssigned').hide('slide', { direction: 'right' }, 500);;
         }, 3000);
-    }*/
+    } else if (document.cookie.indexOf("user_is_already_assigned=") >= 0) {
+        jQuery('.popup.userAlreadyAssigned').show('slide', { direction: 'right' }, 500);
+        document.cookie = 'user_is_already_assigned=; Path=/Campaign; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        setTimeout(function() {
+            jQuery('.popup.userAlreadyAssigned').hide('slide', { direction: 'right' }, 500);
+        }, 3000);
+    }
 });
