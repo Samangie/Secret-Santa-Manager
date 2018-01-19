@@ -6,6 +6,7 @@
  * Time: 16:00
  */
 
+include_once 'Core/lib/Placeholder.php';
 
 abstract class ComponentController
 {
@@ -21,18 +22,15 @@ abstract class ComponentController
             $linkText = 'Logout';
         }
         $headerPlaceholders = array(
-            array(
-                'name' => 'LOGIN',
-                'template' => 'loginLink',
-                'type' => false,
-                'innerPlaceholders' => array(
+            new Placeholder('LOGIN','loginLink','',
+                array(
                     'LINKHREF',
                     'LINKTEXT',
                 ),
-                'placeholderContent' => array(
+                array(
                     'linkhref' => $linkHref,
                     'linktext' => $linkText,
-                ),
+                )
             ),
         );
 

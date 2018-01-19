@@ -33,7 +33,7 @@ class CampaignValidator extends Validator
 
     public function campaignIsAssigned(bool $setMessage = true)
     {
-        $campaign = $this->model->readById($this->model->id);
+        $campaign = $this->model->readById('isassigned', $this->model->id);
         if (empty($campaign['isassigned'])) {
             return true;
         }
@@ -82,7 +82,7 @@ class CampaignValidator extends Validator
     {
         if ($this->campaignIsAssigned() && $this->hasEnoughUsers()) {
             if ($setMessage) {
-                $errorMessage= '<a href="/Campaign/assign?id=' . $this->model->id .'"class="btn btn-primary"> Zuweisen </a><br/><br/>';
+                $errorMessage= '<a href="/Campaign/assign?id=' . $this->model->id .'" class="alert-link"> Zuweisen </a>';
                 $this->setErrorMessages('assignment_is_available', $errorMessage);
             }
             return true;

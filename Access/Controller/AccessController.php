@@ -9,6 +9,7 @@
 
 require_once 'Access/Model/User.php';
 require_once 'Access/lib/UserValidator.php';
+include_once 'Core/lib/Placeholder.php';
 
 class AccessController extends ComponentController
 {
@@ -23,29 +24,19 @@ class AccessController extends ComponentController
             $errorMessages = array();
         }
         $placeholders = array(
-            array(
-                'name' => 'ERROR_LOGIN',
-                'template' => 'errorMessagesLogin_content',
-                'type' => false,
-                'innerPlaceholders' =>
-                    array(
-                        'USER_DOESNT_EXIST'
-                    ),
-                'placeholderContent' => $errorMessages,
+            new Placeholder('ERROR_LOGIN', 'errorMessagesLogin_content', '',
+                array(
+                    'USER_DOESNT_EXIST'
+                ), $errorMessages
             ),
-            array(
-                'name' => 'ERROR_REGISTRATION',
-                'template' => 'errorMessagesRegistration_content',
-                'type' => false,
-                'innerPlaceholders' =>
-                    array(
-                        'UNIQUE_USERNAME',
-                        'NOT_VALID_PASSWORD',
-                        'DIFFERENT_PASSWORDS',
-                        'NOT_VALID_EMAIL',
-                        'UNIQUE_EMAIL',
-                    ),
-                'placeholderContent' => $errorMessages,
+            new Placeholder('ERROR_REGISTRATION', 'errorMessagesRegistration_content', '',
+                array(
+                    'UNIQUE_USERNAME',
+                    'NOT_VALID_PASSWORD',
+                    'DIFFERENT_PASSWORDS',
+                    'NOT_VALID_EMAIL',
+                    'UNIQUE_EMAIL',
+                ), $errorMessages
             ),
         );
         $this->output('access','index', $placeholders);

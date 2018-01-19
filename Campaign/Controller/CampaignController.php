@@ -7,6 +7,7 @@
  */
 
 include_once 'Core/Controller/ComponentController.php';
+include_once 'Core/lib/Placeholder.php';
 require_once 'Campaign/Model/Campaign.php';
 require_once 'Campaign/lib/CampaignValidator.php';
 
@@ -28,44 +29,25 @@ class CampaignController extends ComponentController
             $campaignsUserAssigned = $user->getCampaignIdsByUsername();
 
             $placeholders = array(
-                array(
-                    'name' => 'CAMPAIGNS_CREATE',
-                    'template' => 'campaigns_create_form',
-                    'type' => false,
-                    'innerPlaceholders' => '',
-                    'placeholderContent' => '',
+                new Placeholder('CAMPAIGNS_CREATE','campaigns_create_form'),
+                new Placeholder('CAMPAIGNS', 'allCampaigns_content_loop', 'loop',
+                    array(
+                        'ID',
+                        'TITLE',
+                        'STARTDATE',
+                        'ISASSIGNED'
+                    ), $campaignEntries
                 ),
-                array(
-                    'name' => 'CAMPAIGNS',
-                    'template' => 'allCampaigns_content_loop',
-                    'type' => 'loop',
-                    'innerPlaceholders' =>
-                        array(
-                            'ID',
-                            'TITLE',
-                            'STARTDATE',
-                            'ISASSIGNED'
-                        ),
-                    'placeholderContent' => $campaignEntries,
-                ),
-                array(
-                    'name' => 'RIGHTS',
-                    'template' => '',
-                    'type' => 'area',
-                    'innerPlaceholders' => '',
-                    'placeholderContent' => array(
+                new Placeholder('RIGHTS','','area',array(),
+                    array(
                         'isTrue' => $hasNoRights,
                         'replace' => ''
-                    ),
+                    )
                 ),
-                array(
-                    'name' => 'CAMPAIGNS_USER_ASSIGNED',
-                    'template' => 'user_campaigns_content',
-                    'type' => 'loop',
-                    'innerPlaceholders' => array(
+                new Placeholder('CAMPAIGNS_USER_ASSIGNED', 'user_campaigns_content', 'loop',
+                    array(
                         'CAMPAIGN_ID'
-                    ),
-                    'placeholderContent' => $campaignsUserAssigned,
+                    ), $campaignsUserAssigned
                 ),
             );
 
@@ -154,37 +136,23 @@ class CampaignController extends ComponentController
             }
 
             $placeholders = array(
-                array(
-                    'name' => 'PARTICIPANTS',
-                    'template' => 'allParticipants_content_loop',
-                    'type' => 'object-loop',
-                    'innerPlaceholders' =>
-                        array(
-                            'USERNAME'
-                        ),
-                    'placeholderContent' => $participantEntries
+                new Placeholder('PARTICIPANTS', 'allParticipants_content_loop', 'object-loop',
+                    array(
+                        'USERNAME'
+                    ), $participantEntries
                 ),
-                array(
-                    'name' => 'ERROR_LOGIN',
-                    'template' => 'errorMessagesAssignment_content',
-                    'type' => false,
-                    'innerPlaceholders' =>
-                        array(
-                            'HAS_ENOUGH_USERS',
-                            'ASSIGNMENT_IS_AVAILABLE',
-                            'CAMPAIGN_IS_ASSIGNED'
-                        ),
-                    'placeholderContent' => $errorMessages,
+                new Placeholder('ERROR_LOGIN','errorMessagesAssignment_content','',
+                    array(
+                        'HAS_ENOUGH_USERS',
+                        'ASSIGNMENT_IS_AVAILABLE',
+                        'CAMPAIGN_IS_ASSIGNED',
+                    ), $errorMessages, true
                 ),
-                array(
-                    'name' => 'RIGHTS',
-                    'template' => '',
-                    'type' => 'area',
-                    'innerPlaceholders' => '',
-                    'placeholderContent' => array(
+                new Placeholder('RIGHTS','','area',array(),
+                    array(
                         'isTrue' => $hasNoRights,
                         'replace' => ''
-                    ),
+                    )
                 ),
             );
             $this->output('campaign', 'participants',$placeholders);

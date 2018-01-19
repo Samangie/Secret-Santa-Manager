@@ -34,9 +34,9 @@ abstract class Model
         return $result;
     }
 
-    public function readById(int $id)
+    public function readById(string $filter, int $id)
     {
-        $statement = $this::getConnection()->prepare('SELECT * FROM `' . $this->tableName . '` WHERE id = :id');
+        $statement = $this::getConnection()->prepare('SELECT '. $filter .' FROM `' . $this->tableName . '` WHERE id = :id');
         $statement->bindParam(':id',$id);
 
         $statement->execute();
@@ -47,7 +47,7 @@ abstract class Model
 
     public function readByAttribut($attribut, $value)
     {
-        $statement = $this::getConnection()->prepare('SELECT ' . $attribut . ' FROM `' . $this->tableName . '` WHERE '. $attribut .'= :'.$attribut);
+        $statement = $this::getConnection()->prepare('SELECT ' . $attribut . ' FROM `' . $this->tableName . '` WHERE '. $attribut .'= :'.$value);
         $statement->bindParam(':'.$attribut,$value);
 
         $statement->execute();

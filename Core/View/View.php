@@ -77,65 +77,7 @@ class View
             $module = $this->controllerName;
         }
         foreach ($placeholders as $placeholder) {
-            $mainPlaceholder = $placeholder['name'];
-            $templateName = $placeholder['template'];
-            $type = $placeholder['type'];
-            $innerPlaceholders = $placeholder['innerPlaceholders'];
-            $placeholderContent = $placeholder['placeholderContent'];
-
-            $contentTemplate = '';
-
-            if ($type == 'loop' || $type == 'object-loop') {
-                foreach ($placeholderContent as $entry) {
-                    $pathLoop = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
-                    $loopTemplate = file_get_contents($pathLoop);
-                    foreach ($innerPlaceholders as $innerPlaceholder) {
-                        if ($type == 'object-loop') {
-                            $methodeNameForGet = 'get' . $innerPlaceholder;
-                            $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($entry->$methodeNameForGet()), $loopTemplate);
-                        } else {
-                            $loopTemplate = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($entry[strtolower($innerPlaceholder)]), $loopTemplate);
-                        }
-                    }
-                    $contentTemplate .= $loopTemplate;
-                }
-                $fileTemplate = str_replace('[[' . $mainPlaceholder . ']]', $contentTemplate, $fileTemplate);
-            } else if ($type == 'area') {
-                $startPlaceholder = '<'. $mainPlaceholder .'>';
-                $endPlaceholder = '</'. $mainPlaceholder .'>';
-                if ($placeholderContent['isTrue']) {
-                    $newContent = $placeholderContent['replace'];
-                    $contentTemplate = preg_replace('#(' . preg_quote($startPlaceholder) . ')(.*?)(' . preg_quote($endPlaceholder) . ')#si', '$1' . $newContent . '$3', $fileTemplate);
-                    $fileTemplate = $contentTemplate;
-                }
-
-            } else {
-                if (!empty($innerPlaceholders)) {
-                    $pathPlaceholder = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
-                    $templatePlaceholder = file_get_contents($pathPlaceholder);
-                    foreach ($innerPlaceholders as $innerPlaceholder) {
-                        if (array_key_exists(strtolower($innerPlaceholder),$placeholderContent)) {
-                            $templatePlaceholder = str_replace('[[' . $innerPlaceholder . ']]', htmlspecialchars($placeholderContent[strtolower($innerPlaceholder)]), $templatePlaceholder);
-                        } else {
-                            $templatePlaceholder = str_replace('[[' . $innerPlaceholder . ']]', '', $templatePlaceholder);
-                        }
-                    }
-                    $contentTemplate = $templatePlaceholder;
-                } else {
-                    if (empty($placeholderContent)) {
-                        $pathPlaceholder = ucfirst($module) . '/lib/templates/' . $templateName . '.html';
-                        $templatePlaceholder = file_get_contents($pathPlaceholder);
-                        $contentTemplate = $templatePlaceholder;
-                    } else {
-                        $contentTemplate = $placeholderContent;
-                    }
-                }
-                if (!empty($contentTemplate)) {
-                    $fileTemplate = str_replace('[[' . $mainPlaceholder . ']]', $contentTemplate, $fileTemplate);
-                } else {
-                    $fileTemplate = str_replace('[[' . $mainPlaceholder . ']]', '', $fileTemplate);
-                }
-            }
+            $fileTemplate = $placeholder->fillContent($fileTemplate, $module);
         }
         return $fileTemplate;
     }
