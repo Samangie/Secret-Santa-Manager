@@ -75,6 +75,7 @@ class User extends Model
             return true;
         }
 
+        return false;
     }
 
     public function login()
@@ -96,6 +97,7 @@ class User extends Model
             $this->username = $result['username'];
             return true;
         }
+        return false;
     }
 
     public function logout()

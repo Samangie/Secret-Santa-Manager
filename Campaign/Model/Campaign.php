@@ -51,6 +51,7 @@ class Campaign extends Model
         if ($statement->execute()) {
             return true;
         }
+        return false;
     }
 
     public function readAllCampaigns()
@@ -68,8 +69,6 @@ class Campaign extends Model
 
     public function assign()
     {
-        $campaign = $this->readById('id', $this->id);
-
         $allParticipants = $this->getUsersByCampaignId();
         $allSantas = $allParticipants;
         $allDonees = $allParticipants;
@@ -137,6 +136,7 @@ class Campaign extends Model
         if ($statement->execute()) {
             return true;
         }
+        return false;
     }
 
     public function getUsersIdsByCampaignId()
@@ -175,9 +175,7 @@ class Campaign extends Model
             $statement->bindParam(':username',$username);
             $statement->bindParam(':campaign_id',$this->id);
 
-            if ($statement->execute()) {
-                return true;
-            }
+            $statement->execute();
         }
     }
 
@@ -201,7 +199,7 @@ class Campaign extends Model
         }
     }
 
-    public function insertAssignedUserPair($santaId, $doneeId)
+    public function insertAssignedUserPair(int $santaId, int $doneeId)
     {
         $statement = $this::getConnection()->prepare('INSERT INTO `assigned_user` (`campaign_id`, `santa_id`, `donee_id`) VALUES (:campaign_id, :santa_id, :donee_id)');
 

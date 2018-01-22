@@ -9,15 +9,16 @@
 
 class Validator
 {
-
     protected $model;
     protected $errorMessagesArray = array();
 
-    public function __construct(Model $model) {
+    public function __construct(Model $model)
+    {
         $this->model = $model;
     }
 
-    public function setErrorMessages(string $identificator, string $message) {
+    public function setErrorMessages(string $identificator, string $message)
+    {
         $this->errorMessagesArray[$identificator] = $message;
         $_SESSION['errorMessages'] = $this->errorMessagesArray;
     }

@@ -45,16 +45,16 @@ abstract class Model
         return $result;
     }
 
-    public function readByAttribut($attribut, $value)
+    public function readByAttribut(string $filter, string $value)
     {
-        $statement = $this::getConnection()->prepare('SELECT ' . $attribut . ' FROM `' . $this->tableName . '` WHERE '. $attribut .'= :'.$value);
-        $statement->bindParam(':'.$attribut,$value);
-
+        $statement = $this::getConnection()->prepare('SELECT `' . $filter . '` FROM `' . $this->tableName . '` WHERE '. $filter .' = :'.$filter);
+        $statement->bindParam(':'.$filter,$value);
         $statement->execute();
 
         if ($statement->rowCount() == 0) {
             return true;
         }
+        return false;
     }
 
     public function deleteById(int $id)
@@ -66,7 +66,7 @@ abstract class Model
         if ($statement->execute()) {
             return true;
         }
-
+        return false;
     }
 
 }

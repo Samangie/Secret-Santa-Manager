@@ -12,8 +12,6 @@ require_once 'Access/Model/User.php';
 
 class UserValidator extends Validator
 {
-    protected $model;
-
     public function __construct(User $model)
     {
         parent::__construct($model);
@@ -35,6 +33,7 @@ class UserValidator extends Validator
         ) {
             return true;
         }
+        return false;
     }
 
     public function uniqueUsername(string $username, bool $setMessage = true)
@@ -58,6 +57,7 @@ class UserValidator extends Validator
             $errorMessage = 'Das Passwort muss zwischen 8 - 25 zeichen lang sein und ein Sonderzeichen sowie eine Zahl enthalten!';
             $this->setErrorMessages('not_valid_password', $errorMessage);
         }
+        return false;
     }
 
     public function comparePasswords(string $password, string $reppassword, bool $setMessage = true)

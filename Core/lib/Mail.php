@@ -25,6 +25,6 @@ class Mail
         $timestamp = getdate();
         $timestamp = $timestamp['mday'] .'.'. $timestamp['mon'] . '.' . $timestamp['yday'] . ' ' . $timestamp['hours'] . ':' . $timestamp['minutes'] . ':'. $timestamp['seconds'];
         $logLine = $timestamp . '-' . $logLine . "\n";
-        file_put_contents($pathFile, $logLine, FILE_APPEND);die();
+        file_put_contents($pathFile, $logLine, FILE_APPEND);
     }
 }
