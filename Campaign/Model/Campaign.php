@@ -68,13 +68,8 @@ class Campaign extends Model
 
     public function assign()
     {
-        $campaign = $this->readById('id, startdate', $this->id);
-        $this->startdate = $campaign['startdate'];
-        $currentDate = strtotime(date("Y-m-d"));
+        $campaign = $this->readById('id', $this->id);
 
-       /* if ($this->startdate != $currentDate) {
-            return false;
-        }*/
         $allParticipants = $this->getUsersByCampaignId();
         $allSantas = $allParticipants;
         $allDonees = $allParticipants;
@@ -125,11 +120,11 @@ class Campaign extends Model
             $santaName = $pair['santa']->getUsername();
             $doneeName = $pair['donee']->getUsername();
             $mail->sendAssignmentMail($santaEmail, $santaName, $doneeName);
-            //$this->insertAssignedUserPair($santaId, $doneeId);
+            $this->insertAssignedUserPair($santaId, $doneeId);
         }
 
-        //$this->isAssigned = 1;
-        //$this->updateAttrAssigned();
+        $this->isAssigned = 1;
+        $this->updateAttrAssigned();
     }
 
     public function updateAttrAssigned()

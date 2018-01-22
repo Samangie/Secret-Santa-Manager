@@ -8,7 +8,7 @@
  */
 class Mail
 {
-    protected function sendMail($to, $subject, $message)
+    protected function sendMail(string $to, string $subject, string $message)
     {
         $headers = "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
