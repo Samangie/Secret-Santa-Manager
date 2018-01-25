@@ -1,4 +1,4 @@
-CREATE DATABASE `secret-santa-manager`
+CREATE DATABASE IF NOT EXISTS `secret-santa-manager`
   DEFAULT CHARACTER SET utf8
   DEFAULT COLLATE utf8_general_ci;
 
@@ -16,7 +16,7 @@ CREATE TABLE `campaign` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `title` VARCHAR(30),
     `startdate` DATE,
-    `isAssigned` TINYINT DFAULT 0,
+    `isAssigned` TINYINT DEFAULT 0
     );
 
 CREATE TABLE `user_campaign` (
